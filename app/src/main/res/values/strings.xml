@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">ProyectoFinal</string>
     <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="stringnotas">Fragment Notas</string>
+    <string name="stringtareas">Fragment Tareas</string>
 </resources>
