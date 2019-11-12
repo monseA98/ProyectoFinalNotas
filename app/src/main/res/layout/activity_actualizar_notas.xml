@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InsertarNotas">
+    tools:context=".ActualizarNotas">
 
     <EditText
-        android:id="@+id/txtTituloNota"
+        android:id="@+id/txtTituloNotaAct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -17,26 +17,26 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="92dp"
         android:layout_marginLeft="92dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginEnd="92dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="106dp"
         android:layout_marginRight="106dp"
         android:ems="10"
         android:hint="Titulo"
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/txtDescripNota"
+        android:id="@+id/txtDescripNotaAct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtTituloNota"
+        android:layout_below="@+id/txtTituloNotaAct"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginStart="92dp"
         android:layout_marginLeft="92dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="92dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="106dp"
         android:layout_marginRight="106dp"
         android:ems="10"
         android:gravity="start|top"
@@ -44,7 +44,7 @@
         android:inputType="textMultiLine" />
 
     <Button
-        android:id="@+id/btnInsertarNota"
+        android:id="@+id/btnActualizarNota"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -53,51 +53,34 @@
         android:layout_marginEnd="38dp"
         android:layout_marginRight="38dp"
         android:layout_marginBottom="24dp"
-        android:text="Insertar" />
+        android:text="Actualizar" />
 
     <ImageButton
-        android:id="@+id/btnAdjuntarNota"
+        android:id="@+id/btnAdjuntarNotaAct"
         android:layout_width="48dp"
         android:layout_height="46dp"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="41dp"
         android:layout_marginRight="41dp"
         android:layout_marginBottom="26dp"
-        android:layout_toStartOf="@+id/btnFotoNota"
-        android:layout_toLeftOf="@+id/btnFotoNota"
+        android:layout_toStartOf="@+id/btnFotoNotaAct"
+        android:layout_toLeftOf="@+id/btnFotoNotaAct"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_attach_file_black_24dp" />
 
     <ImageButton
-        android:id="@+id/btnFotoNota"
+        android:id="@+id/btnFotoNotaAct"
         android:layout_width="48dp"
         android:layout_height="46dp"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginBottom="27dp"
-        android:layout_toStartOf="@+id/btnInsertarNota"
-        android:layout_toLeftOf="@+id/btnInsertarNota"
+        android:layout_toStartOf="@+id/btnActualizarNota"
+        android:layout_toLeftOf="@+id/btnActualizarNota"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="wrap_content"
-        android:layout_height="347dp"
-        android:layout_below="@+id/txtDescripNota"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="56dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="52dp"
-
-        android:layout_marginRight="52dp"
-        android:scrollbars="vertical" />
 
 </RelativeLayout>

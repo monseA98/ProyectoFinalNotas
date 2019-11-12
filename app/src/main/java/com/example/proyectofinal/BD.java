@@ -57,6 +57,21 @@ public class BD extends SQLiteOpenHelper {
 
     public  static final String TABLE_NAME_RECORDATORIOS =
             "Recordatorios";
+
+    ///RUTAS///////////////////////////////////////////////////////////////////////////////
+    private String SCRIPT_DB_RUTAS = "create table Rutas (" +
+            "_id integer primary key autoincrement," +
+            "ruta text not null," +
+            "idTarea int not null, foreign key (idTarea) references Tareas(_id));"
+            ;
+
+    public static final String[] COLUMNS_NAME_RUTAS =
+            {
+                    "_id", "ruta", "idTarea"
+            };
+
+    public  static final String TABLE_NAME_RUTAS =
+            "Rutas";
 /////////////////////////////////////////////////////////////////////////////////////////
 
     public BD(@Nullable Context context) {
@@ -71,6 +86,7 @@ public class BD extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SCRIPT_DB_NOTAS);
         sqLiteDatabase.execSQL(SCRIPT_DB_TAREAS);
         sqLiteDatabase.execSQL(SCRIPT_DB_RECORDATORIOS);
+        sqLiteDatabase.execSQL(SCRIPT_DB_RUTAS);
     }
 
     @Override

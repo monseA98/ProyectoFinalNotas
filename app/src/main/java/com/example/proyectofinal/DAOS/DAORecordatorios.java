@@ -67,4 +67,11 @@ public class DAORecordatorios {
         cursor.close();
         return recordatorios;
     }
+
+    public int eliminar (int id){
+
+        String[] argumentos = {String.valueOf(id)};
+        return _sqLiteDatabase.delete(BD.TABLE_NAME_RECORDATORIOS, "_id = ?", argumentos);
+
+    }
 }
