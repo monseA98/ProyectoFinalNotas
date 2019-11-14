@@ -34,8 +34,8 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
         txtTitulo = findViewById(R.id.txtTituloNotaAct);
         txtTitulo.setText(nota.getTitulo().toString());
-
-        txtDescripcion = findViewById(R.id.txtDescripNota);
+        
+        txtDescripcion = findViewById(R.id.txtDescripNotaAct);
         txtDescripcion.setText(nota.getDescripcion());
 
         btnAdjuntar = (ImageButton) findViewById(R.id.btnAdjuntarNotaAct);

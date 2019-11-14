@@ -2,6 +2,7 @@ package com.example.proyectofinal;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.proyectofinal.DAOS.DAONotas;
@@ -27,6 +29,8 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
     Button btnInsertar;
     EditText txtTitulo, txtDescripcion;
     RecyclerView recyclerView;
+    ImageView imageView;
+    MyRecyclerViewAdapter Imagesadapter;
 
     Nota nota;
     Uri path;
@@ -51,9 +55,14 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         btnFoto.setOnClickListener(this);
         btnInsertar.setOnClickListener(this);
 
+        //imageView = findViewById(R.id.imageView);
 
         adapter = new ArrayAdapter<Uri>(this, android.R.layout.simple_list_item_1, listaRutas);
         //recyclerView.setAdapter(adapter);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+
 
     }
 
@@ -116,7 +125,11 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
             path =  data.getData(); //obtiene la ruta de la imagen seleccionada
 
             listaRutas.add(path);
+            //imageView.setImageURI(path);
 
+            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+
+            recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
 

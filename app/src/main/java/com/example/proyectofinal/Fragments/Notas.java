@@ -8,13 +8,26 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
+import com.example.proyectofinal.ActualizarNotas;
+import com.example.proyectofinal.DAOS.DAONotas;
 import com.example.proyectofinal.InsertarNotas;
+import com.example.proyectofinal.Nota;
 import com.example.proyectofinal.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +46,11 @@ public class Notas extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ListView lvNotas;
+    private DAONotas daoNotas;
+    private ArrayList<Nota> notas;
+    private ArrayAdapter<Nota> adapter;
+    private EditText editText;
 
     private OnFragmentInteractionListener mListener;
 
@@ -85,7 +103,111 @@ public class Notas extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+
+        Button button = (Button) getView().findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                editText = (EditText) getActivity().findViewById(R.id.editText);
+
+                String[] Notas1 = {editText.getText().toString(), editText.getText().toString()};
+
+                daoNotas = new DAONotas(getActivity());
+
+                notas = daoNotas.buscarporTitulo(Notas1);
+
+                adapter = new ArrayAdapter<Nota>(getActivity(), android.R.layout.simple_list_item_1, notas);
+
+                lvNotas = (ListView) getActivity().findViewById(R.id.lvNotas);
+
+                lvNotas.setAdapter(adapter);
+            }
+        });
+
+
+
+        String[] Notas1 = {"", ""};
+
+        daoNotas = new DAONotas(getActivity());
+
+        notas = daoNotas.buscarporTitulo(Notas1);
+
+        adapter = new ArrayAdapter<Nota>(getActivity(), android.R.layout.simple_list_item_1, notas);
+
+        lvNotas = (ListView) getActivity().findViewById(R.id.lvNotas);
+
+        lvNotas.setAdapter(adapter);
+
+        registerForContextMenu(lvNotas);
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String[] Notas1 = {""};
+
+        daoNotas = new DAONotas(getActivity());
+
+        notas = daoNotas.buscarporTitulo(Notas1);
+
+        adapter = new ArrayAdapter<Nota>(getActivity(), android.R.layout.simple_list_item_1, notas);
+
+        lvNotas = (ListView) getActivity().findViewById(R.id.lvNotas);
+
+        lvNotas.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View lv, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, lv, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+        daoNotas = new DAONotas(getActivity());
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        lvNotas = (ListView) getActivity().findViewById(R.id.lvNotas);
+
+        Nota nota = (Nota) lvNotas.getItemAtPosition(info.position);
+
+        switch (item.getItemId()) {
+            case R.id.eliminar:
+                daoNotas.eliminar(nota.getId());
+
+                String[] Notas1 = {""};
+
+                daoNotas = new DAONotas(getActivity());
+
+                notas = daoNotas.buscarporTitulo(Notas1);
+
+                adapter = new ArrayAdapter<Nota>(getActivity(), android.R.layout.simple_list_item_1, notas);
+
+                lvNotas = (ListView) getActivity().findViewById(R.id.lvNotas);
+
+                lvNotas.setAdapter(adapter);
+
+                return true;
+            case R.id.actualizar:
+                Intent intent = new Intent(getActivity(), ActualizarNotas.class);
+                intent.putExtra("nota", nota);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

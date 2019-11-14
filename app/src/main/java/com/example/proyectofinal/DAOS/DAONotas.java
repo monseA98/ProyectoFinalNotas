@@ -80,7 +80,7 @@ public class DAONotas {
         ArrayList<Nota> notas = new ArrayList<>();
 
         String[] columnasAConsultar = {BD.COLUMNS_NAME_NOTAS[0], BD.COLUMNS_NAME_NOTAS[1], BD.COLUMNS_NAME_NOTAS[2]};
-        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_NOTAS, columnasAConsultar, "titulo = ?", titulo, null, null, null);
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_NOTAS, columnasAConsultar, "titulo = ? OR descripcion = ?", titulo, null, null, null);
 
         if(titulo[0].equals("")){
 
