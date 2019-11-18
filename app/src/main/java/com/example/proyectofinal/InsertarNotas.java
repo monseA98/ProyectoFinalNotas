@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -101,7 +102,8 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
                 DAORutasNotas dao = new DAORutasNotas(this);
 
                 dao.insert(ruta);
-                Toast.makeText(this, "Se inserto la ruta " + listaRutas.get(i), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Se inserto la ruta " + listaRutas.get(i), Toast.LENGTH_SHORT).show();
+                Log.i("RUTAS", ""+listaRutas.get(i));
 
             }
         }else{

@@ -88,9 +88,11 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
         Toast.makeText(this, "Size "+daoRutas.buscar(idNota).size(), Toast.LENGTH_SHORT).show();
 
-        for(int i=0; i<daoRutas.buscar(idNota).size()-1; i++){
-            listaRutas.add(Uri.parse(daoRutas.buscar(idNota).toString()));
+        for(int i=0; i<daoRutas.buscar(idNota).size(); i++){
+            listaRutas.add(daoRutas.buscar(idNota).get(i));
         }
+
+        //Toast.makeText(this, "Size "+listaRutas.size(), Toast.LENGTH_SHORT).show();
     }
 
     private void actualizar(View view){

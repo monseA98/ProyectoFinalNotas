@@ -104,6 +104,7 @@ public class BD extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SCRIPT_DB_TAREAS);
         sqLiteDatabase.execSQL(SCRIPT_DB_RECORDATORIOS);
         sqLiteDatabase.execSQL(SCRIPT_DB_RUTAS);
+        sqLiteDatabase.execSQL(SCRIPT_DB_RUTAS_NOTAS);
     }
 
     @Override
