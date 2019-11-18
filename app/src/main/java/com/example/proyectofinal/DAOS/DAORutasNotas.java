@@ -40,7 +40,7 @@ public class DAORutasNotas {
 
         ////////////////
         String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTAS_NOTAS[1]};
-        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS_NOTAS, columnasAConsultar, "idTarea = ?", id, null, null, null);
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS_NOTAS, columnasAConsultar, "_idNota = ?", id, null, null, null);
 
         if(id[0].equals("")){
 
@@ -55,11 +55,11 @@ public class DAORutasNotas {
 
         do {
 
-            int idObtenidoDeBD = cursor.getInt(0);
+            //int idObtenidoDeBD = cursor.getInt(0);
             Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            int idTareaObtenidoDeBD = cursor.getInt(2);
+            //int idTareaObtenidoDeBD = cursor.getInt(2);
 
-            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, idTareaObtenidoDeBD);
+            //Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, idTareaObtenidoDeBD);
             rutas.add(pathObtenidoDeBD);
 
         } while (cursor.moveToNext());

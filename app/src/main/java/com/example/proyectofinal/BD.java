@@ -79,12 +79,12 @@ public class BD extends SQLiteOpenHelper {
     private String SCRIPT_DB_RUTAS_NOTAS = "create table RutasNotas (" +
             "_id integer primary key autoincrement," +
             "ruta text not null," +
-            "idTarea int not null, foreign key (idTarea) references Tareas(_id));"
+            "_idNota int not null, foreign key (_idNota) references Notas(_id));"
             ;
 
     public static final String[] COLUMNS_NAME_RUTAS_NOTAS =
             {
-                    "_id", "ruta", "idTarea"
+                    "_id", "ruta", "_idNota"
             };
 
     public  static final String TABLE_NAME_RUTAS_NOTAS =

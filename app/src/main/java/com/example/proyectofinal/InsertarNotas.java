@@ -70,7 +70,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         if(view == btnInsertar){
             insert(view);
-            insertRutas();
+
 
         }
 
@@ -88,26 +88,28 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.btnInsertarNota:
                 dao.insert(nota);
-                //finish();
+                insertRutas(nota.getId());
+                finish();
         }
 
         //Toast.makeText(this, "Se inserto la nota "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
-    private void insertRutas(){
+    private void insertRutas(int idNota){
         if(listaRutas!=null) {
             for (int i = 0; i < listaRutas.size(); i++) {
 
-                Ruta ruta = new Ruta(0, listaRutas.get(i), nota.getId());
+                Ruta ruta = new Ruta(0, listaRutas.get(i), idNota); //nota.getId()
                 DAORutasNotas dao = new DAORutasNotas(this);
 
                 dao.insert(ruta);
                 //Toast.makeText(this, "Se inserto la ruta " + listaRutas.get(i), Toast.LENGTH_SHORT).show();
-                Log.i("RUTAS", ""+listaRutas.get(i));
+                Log.i("RUTAS", ""+listaRutas.get(i) +" idNota "+nota.getId());
+                Log.i("RUTAS", ""+ruta.getId() +" path "+ruta.getRuta()+" idNota "+ruta.getIdTarea());
 
             }
         }else{
-            finish();
+            //finish();
         }
         finish();
 
