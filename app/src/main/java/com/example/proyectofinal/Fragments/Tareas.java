@@ -8,13 +8,28 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
+import com.example.proyectofinal.ActualizarTareas;
+import com.example.proyectofinal.DAOS.DAONotas;
+import com.example.proyectofinal.DAOS.DAOTareas;
+import com.example.proyectofinal.Nota;
 import com.example.proyectofinal.R;
+import com.example.proyectofinal.Tarea;
 import com.example.proyectofinal.activity_insertar_tareas;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +48,11 @@ public class Tareas extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ListView lvTareas;
+    private DAOTareas daoTareas;
+    private ArrayList<Tarea> tareas;
+    private ArrayAdapter<Tarea> adapter;
+    private EditText editText;
 
     private OnFragmentInteractionListener mListener;
 
@@ -84,6 +104,108 @@ public class Tareas extends Fragment {
                 startActivity(intent);
             }
         });
+
+        Button button = (Button) getView().findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                editText = (EditText) getActivity().findViewById(R.id.editText);
+
+                String[] Tareas1 = {editText.getText().toString(), editText.getText().toString()};
+
+                daoTareas = new DAOTareas(getActivity());
+
+                tareas = daoTareas.buscarporTitulo(Tareas1);
+
+                adapter = new ArrayAdapter<Tarea>(getActivity(), android.R.layout.simple_list_item_1, tareas);
+
+                lvTareas = (ListView) getActivity().findViewById(R.id.lvTareas);
+
+                lvTareas.setAdapter(adapter);
+            }
+        });
+
+        editText = (EditText) getActivity().findViewById(R.id.editText);
+
+        String[] Tareas1 = {""};
+
+        daoTareas = new DAOTareas(getActivity());
+
+        tareas = daoTareas.buscarporTitulo(Tareas1);
+
+        adapter = new ArrayAdapter<Tarea>(getActivity(), android.R.layout.simple_list_item_1, tareas);
+
+        lvTareas = (ListView) getActivity().findViewById(R.id.lvTareas);
+
+        lvTareas.setAdapter(adapter);
+
+        registerForContextMenu(lvTareas);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        editText = (EditText) getActivity().findViewById(R.id.editText);
+
+        String[] Tareas1 = {editText.getText().toString(), editText.getText().toString()};
+
+        daoTareas = new DAOTareas(getActivity());
+
+        tareas = daoTareas.buscarporTitulo(Tareas1);
+
+        adapter = new ArrayAdapter<Tarea>(getActivity(), android.R.layout.simple_list_item_1, tareas);
+
+        lvTareas = (ListView) getActivity().findViewById(R.id.lvTareas);
+
+        lvTareas.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View lv, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, lv, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+        daoTareas = new DAOTareas(getActivity());
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        lvTareas = (ListView) getActivity().findViewById(R.id.lvTareas);
+
+        Tarea tarea = (Tarea) lvTareas.getItemAtPosition(info.position);
+
+        switch (item.getItemId()) {
+            case R.id.eliminar:
+                daoTareas.eliminar(tarea.getId());
+
+                String[] Tareas1 = {editText.getText().toString(), editText.getText().toString()};
+
+                daoTareas = new DAOTareas(getActivity());
+
+                tareas = daoTareas.buscarporTitulo(Tareas1);
+
+                adapter = new ArrayAdapter<Tarea>(getActivity(), android.R.layout.simple_list_item_1, tareas);
+
+                lvTareas = (ListView) getActivity().findViewById(R.id.lvTareas);
+
+                lvTareas.setAdapter(adapter);
+
+                return true;
+            case R.id.actualizar:
+                Intent intent = new Intent(getActivity(), ActualizarTareas.class);
+                intent.putExtra("tarea", tarea);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

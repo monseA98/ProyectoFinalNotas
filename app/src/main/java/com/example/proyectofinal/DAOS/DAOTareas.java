@@ -61,8 +61,8 @@ public class DAOTareas {
     public ArrayList<Tarea> buscarporTitulo(String[] titulo){
         ArrayList<Tarea> tareas = new ArrayList<>();
 
-        String[] columnasAConsultar = {BD.COLUMNS_NAME_TAREAS[0], BD.COLUMNS_NAME_TAREAS[1], BD.COLUMNS_NAME_TAREAS[2]};
-        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_TAREAS, columnasAConsultar, "titulo = ?", titulo, null, null, null);
+        String[] columnasAConsultar = {BD.COLUMNS_NAME_TAREAS[0], BD.COLUMNS_NAME_TAREAS[1], BD.COLUMNS_NAME_TAREAS[2], BD.COLUMNS_NAME_TAREAS[3], BD.COLUMNS_NAME_TAREAS[4]};
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_TAREAS, columnasAConsultar, "titulo = ? OR descripcion = ?", titulo, null, null, null);
 
         if(titulo[0].equals("")){
 
@@ -80,8 +80,10 @@ public class DAOTareas {
             int idObtenidoDeBD = cursor.getInt(0);
             String tituloObtenidoDeBD = cursor.getString(1);
             String descripcionObtenidoDeBD = cursor.getString(2);
+            String fechaObtenidoDeBD = cursor.getString(3);
+            String horaObtenidoDeBD = cursor.getString(4);
 
-            Tarea tareaObtenidoDeBD = new Tarea(idObtenidoDeBD, tituloObtenidoDeBD, descripcionObtenidoDeBD, null, null);
+            Tarea tareaObtenidoDeBD = new Tarea(idObtenidoDeBD, tituloObtenidoDeBD, descripcionObtenidoDeBD, fechaObtenidoDeBD, fechaObtenidoDeBD);
             tareas.add(tareaObtenidoDeBD);
 
         } while (cursor.moveToNext());

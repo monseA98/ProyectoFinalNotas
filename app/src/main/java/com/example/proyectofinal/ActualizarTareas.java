@@ -50,7 +50,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
         txtDescripcion.setText(tarea.getDescripcion().toString());
 
         btnFecha = findViewById(R.id.btnFechaAct);
-        btnFecha.setText(tarea.getFecha()+""+tarea.getHora());
+        btnFecha.setText(tarea.getFecha()+" "+tarea.getHora());
 
         btnAdjuntar = (ImageButton) findViewById(R.id.btnAdjuntarTareaAct);
         btnFoto = (ImageButton) findViewById(R.id.btnFotoTareaAct);
@@ -65,7 +65,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if(view == btnActualizar){
             actualizar(view);
-            insertRutas(ruta);
+            //insertRutas(ruta);
         }
 
         if(view == btnFecha){
@@ -97,7 +97,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
         Ruta ruta = new Ruta(0, uri, tarea.getId());
         DAORutas dao = new DAORutas(this);
 
-        dao.insert(ruta);
+        //dao.insert(ruta);
         Toast.makeText(this, "Se inserto la ruta "+uri, Toast.LENGTH_SHORT).show();
     }
 

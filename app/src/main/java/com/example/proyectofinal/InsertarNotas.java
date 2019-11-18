@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.proyectofinal.DAOS.DAONotas;
 import com.example.proyectofinal.DAOS.DAORutas;
+import com.example.proyectofinal.DAOS.DAORutasNotas;
 
 import java.util.ArrayList;
 
@@ -62,8 +63,6 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-
-
     }
 
     @Override
@@ -71,6 +70,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         if(view == btnInsertar){
             insert(view);
             insertRutas();
+
         }
 
         if(view == btnAdjuntar) {
@@ -90,15 +90,15 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
                 //finish();
         }
 
-        Toast.makeText(this, "Se inserto la nota "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Se inserto la nota "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
     private void insertRutas(){
         if(listaRutas!=null) {
-            for (int i = 0; i < listaRutas.size()-1; i++) {
+            for (int i = 0; i < listaRutas.size(); i++) {
 
                 Ruta ruta = new Ruta(0, listaRutas.get(i), nota.getId());
-                DAORutas dao = new DAORutas(this);
+                DAORutasNotas dao = new DAORutasNotas(this);
 
                 dao.insert(ruta);
                 Toast.makeText(this, "Se inserto la ruta " + listaRutas.get(i), Toast.LENGTH_SHORT).show();
@@ -128,7 +128,6 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
             //imageView.setImageURI(path);
 
             Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
-
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();

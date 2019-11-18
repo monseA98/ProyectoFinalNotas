@@ -33,6 +33,7 @@
         android:text="Buscar" />
 
     <ListView
+        android:id="@+id/lvTareas"
         android:layout_width="wrap_content"
         android:layout_height="519dp"
         android:layout_below="@+id/editText"

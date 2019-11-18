@@ -11,11 +11,11 @@ import com.example.proyectofinal.Ruta;
 
 import java.util.ArrayList;
 
-public class DAORutas {
+public class DAORutasNotas {
     SQLiteDatabase _sqLiteDatabase;
     Context ctx;
 
-    public DAORutas(Context ctx) {
+    public DAORutasNotas(Context ctx) {
         this.ctx = ctx;
         _sqLiteDatabase =
                 new BD(ctx).getWritableDatabase();
@@ -26,12 +26,12 @@ public class DAORutas {
                 = new ContentValues();
 
         String path = ruta.getRuta().toString();
-        contentValues.put(BD.COLUMNS_NAME_RUTAS[1],
+        contentValues.put(BD.COLUMNS_NAME_RUTAS_NOTAS[1],
                 path);
-        contentValues.put(BD.COLUMNS_NAME_RUTAS[2],
+        contentValues.put(BD.COLUMNS_NAME_RUTAS_NOTAS[2],
                 ruta.getIdTarea());
 
-        return  _sqLiteDatabase.insert(BD.TABLE_NAME_RUTAS,
+        return  _sqLiteDatabase.insert(BD.TABLE_NAME_RUTAS_NOTAS,
                 null, contentValues);
     }
 
@@ -39,12 +39,12 @@ public class DAORutas {
         ArrayList<Ruta> rutas = new ArrayList<>();
 
         ////////////////
-        String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTAS[1]};
-        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS, columnasAConsultar, "idTarea = ?", id, null, null, null);
+        String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTAS_NOTAS[1]};
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS_NOTAS, columnasAConsultar, "idTarea = ?", id, null, null, null);
 
         if(id[0].equals("")){
 
-            cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS, columnasAConsultar, null, null, null, null, null);
+            cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS_NOTAS, columnasAConsultar, null, null, null, null, null);
         }
 
         if (cursor == null){
@@ -71,7 +71,7 @@ public class DAORutas {
     public int eliminar (int id){
 
         String[] argumentos = {String.valueOf(id)};
-        return _sqLiteDatabase.delete(BD.TABLE_NAME_RUTAS, "_id = ?", argumentos);
+        return _sqLiteDatabase.delete(BD.TABLE_NAME_RUTAS_NOTAS, "_id = ?", argumentos);
 
     }
 }
