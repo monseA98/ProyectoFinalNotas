@@ -62,12 +62,13 @@ public class BD extends SQLiteOpenHelper {
     private String SCRIPT_DB_RUTAS = "create table Rutas (" +
             "_id integer primary key autoincrement," +
             "ruta text not null," +
+            "tipo int not null," +
             "idTarea int not null, foreign key (idTarea) references Tareas(_id));"
             ;
 
     public static final String[] COLUMNS_NAME_RUTAS =
             {
-                    "_id", "ruta", "idTarea"
+                    "_id", "ruta", "tipo", "idTarea"
             };
 
     public  static final String TABLE_NAME_RUTAS =
@@ -76,19 +77,19 @@ public class BD extends SQLiteOpenHelper {
 
 
     ///RUTAS-NOTAS///////////////////////////////////////////////////////////////////////////////
-    private String SCRIPT_DB_RUTAS_NOTAS = "create table RutasNotas (" +
+    private String SCRIPT_DB_RUTASN = "create table RutasNotas (" +
             "_id integer primary key autoincrement," +
             "ruta text not null," +
             "_idNota int not null, foreign key (_idNota) references Notas(_id));"
             ;
 
-    public static final String[] COLUMNS_NAME_RUTAS_NOTAS =
+    public static final String[] COLUMNS_NAME_RUTASN =
             {
                     "_id", "ruta", "_idNota"
             };
 
-    public  static final String TABLE_NAME_RUTAS_NOTAS =
-            "Rutas";
+    public  static final String TABLE_NAME_RUTASN =
+            "RutasNotas";
 /////////////////////////////////////////////////////////////////////////////////////////
 
     public BD(@Nullable Context context) {
@@ -104,7 +105,7 @@ public class BD extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SCRIPT_DB_TAREAS);
         sqLiteDatabase.execSQL(SCRIPT_DB_RECORDATORIOS);
         sqLiteDatabase.execSQL(SCRIPT_DB_RUTAS);
-        sqLiteDatabase.execSQL(SCRIPT_DB_RUTAS_NOTAS);
+        sqLiteDatabase.execSQL(SCRIPT_DB_RUTASN);
     }
 
     @Override

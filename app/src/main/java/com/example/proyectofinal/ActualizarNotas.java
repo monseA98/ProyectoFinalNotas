@@ -82,16 +82,15 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
     }
 
     private void rutas(){
-        DAORutasNotas daoRutas = new DAORutasNotas(this);
+        DAORutas daoRutas = new DAORutas(this);
         String[] idNota = {""};
-        idNota[0] = ""+nota.getId();
+        idNota[0] = ""+nota.getId(); //para pasarselo al de buscar y que busque todas las rutas con el id de la Nota
 
         Toast.makeText(this, "Size "+daoRutas.buscar(idNota).size(), Toast.LENGTH_SHORT).show();
 
         for(int i=0; i<daoRutas.buscar(idNota).size(); i++){
-            listaRutas.add(daoRutas.buscar(idNota).get(i));
+            listaRutas.add(daoRutas.buscarRutas(idNota).get(i));
         }
-
         //Toast.makeText(this, "Size "+listaRutas.size(), Toast.LENGTH_SHORT).show();
     }
 

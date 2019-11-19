@@ -66,6 +66,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     ArrayList<Uri> listaRutas = new ArrayList<>();
 
     private static final int cod_adjuntar = 10;
+    private static final int cod_adjuntarVideo = 20;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 2;
@@ -97,35 +98,8 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         }
 
         recyclerView = findViewById(R.id.recycler);
-
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-    }
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.proyectofinal.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -133,7 +107,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     public void onClick(View view) {
         if(view == btnInsertar){
             insert(view);
-            insertRutas();
+            //insertRutas();
         }
 
         if(view == btnFecha){
@@ -142,11 +116,11 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         }
 
         if(view == btnAdjuntar) {
-            cargarImagen();
+            dialogoAdjuntar();
         }
 
         if(view == btnFoto) {
-            dispatchTakePictureIntent();
+            dialogoTomar();
         }
     }
 
@@ -163,7 +137,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         Toast.makeText(this, "Se inserto la tarea "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
-    private void insertRutas(){
+    /*private void insertRutas(){
         if(listaRutas!=null) {
             for (int i = 0; i < listaRutas.size()-1; i++) {
 
@@ -177,13 +151,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         }
         finish();
 
-    }
-
-    private void cargarImagen() {
-        Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intentGaleria.setType("image/");
-        startActivityForResult(intentGaleria.createChooser(intentGaleria,"Seleccione la aplicacion"),cod_adjuntar);
-    }
+    }*/
 
     private void abrirCalenadario() {
         Calendar c = Calendar.getInstance();
@@ -242,6 +210,73 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         timePickerDialog.show();
     }
 
+    private void dialogoTomar (){
+        final CharSequence[] items = {"Tomar foto", "Tomar vídeo"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccione una opción");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if(item==0){
+                    dispatchTakePictureIntent();
+                }
+
+                if(item==1){
+                    dispatchTakeVideoIntent();
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void dialogoAdjuntar (){
+        final CharSequence[] items = {"Adjunatar foto", "Adjuntar vídeo"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccione una opción");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if(item==0){
+                    cargarImagen();
+                }
+
+                if(item==1){
+                    cargarVideo();
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.proyectofinal.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private File createImageFile() throws IOException {
@@ -254,11 +289,33 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+    private void cargarImagen() {
+        Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intentGaleria.setType("image/");
+        startActivityForResult(intentGaleria.createChooser(intentGaleria,"Seleccione la aplicacion"),cod_adjuntar);
+    }
+
+    private void cargarVideo() {
+        Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        intentGaleria.setType("video/");
+        startActivityForResult(intentGaleria.createChooser(intentGaleria,"Seleccione la aplicacion"),cod_adjuntarVideo);
+    }
+
+    static final int REQUEST_VIDEO_CAPTURE = 3;
+
+    private void dispatchTakeVideoIntent() {
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+        }
+    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -283,30 +340,31 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             recyclerView.setAdapter(Imagesadapter);
         }
 
-//        if(resultCode==RESULT_OK){
-//
-//            switch(requestCode){
-//
-//                case cod_adjuntar: //para cuando adjunto la foto
-//                    ruta =  data.getData(); //obtiene la ruta de la imagen seleccionada
-//                    imageView2.setImageURI(ruta);
-//                    Toast.makeText(this, ""+ruta, Toast.LENGTH_SHORT).show();
-//                    break;
-//
-//                case REQUEST_TAKE_PHOTO:
-//                    Toast.makeText(this, "Llego al onActivityResult", Toast.LENGTH_SHORT).show();
-//                    Bundle extras = data.getExtras();
-//                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-//                    //imageView2.setImageBitmap(imageBitmap);
-//                    //Toast.makeText(this, ""+extras.get("data"), Toast.LENGTH_SHORT).show();
-//                    //imageView2.setImageURI(path);
-//                    break;
-//            }
-//        }
+        if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
+            Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
+            listaRutas.add(videoUri);
+
+            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            recyclerView.setAdapter(Imagesadapter);
+
+            Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+        }
+
+        //tomar video desde la camara
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
+            listaRutas.add(videoUri);
+
+            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            recyclerView.setAdapter(Imagesadapter);
+
+            Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+        }
     }
 
 
 
+    //permisos
     private boolean validarPermisos() {
 
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
@@ -341,7 +399,6 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             }
         }
     }
-
 
     private void cargarDialogoRecomendacion() {
         AlertDialog.Builder dialogo =  new AlertDialog.Builder(this);

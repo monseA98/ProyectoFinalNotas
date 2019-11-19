@@ -93,13 +93,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void insertRutas(Uri uri){
-        Ruta ruta = new Ruta(0, uri, tarea.getId());
-        DAORutas dao = new DAORutas(this);
 
-        //dao.insert(ruta);
-        Toast.makeText(this, "Se inserto la ruta "+uri, Toast.LENGTH_SHORT).show();
-    }
 
     private void cargarImagen() {
         Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

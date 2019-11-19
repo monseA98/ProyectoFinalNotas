@@ -26,12 +26,12 @@ public class DAORutasNotas {
                 = new ContentValues();
 
         String path = ruta.getRuta().toString();
-        contentValues.put(BD.COLUMNS_NAME_RUTAS_NOTAS[1],
+        contentValues.put(BD.COLUMNS_NAME_RUTASN[1],
                 path);
-        contentValues.put(BD.COLUMNS_NAME_RUTAS_NOTAS[2],
+        contentValues.put(BD.COLUMNS_NAME_RUTASN[2],
                 ruta.getIdTarea());
 
-        return  _sqLiteDatabase.insert(BD.TABLE_NAME_RUTAS_NOTAS,
+        return  _sqLiteDatabase.insert(BD.TABLE_NAME_RUTASN,
                 null, contentValues);
     }
 
@@ -39,12 +39,12 @@ public class DAORutasNotas {
         ArrayList<Uri> rutas = new ArrayList<>();
 
         ////////////////
-        String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTAS_NOTAS[1]};
-        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS_NOTAS, columnasAConsultar, "_idNota = ?", id, null, null, null);
+        String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTASN[1]};
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTASN, columnasAConsultar, "_idNota = ?", id, null, null, null);
 
         if(id[0].equals("")){
 
-            cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS_NOTAS, columnasAConsultar, null, null, null, null, null);
+            cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTASN, columnasAConsultar, null, null, null, null, null);
         }
 
         if (cursor == null){
@@ -71,7 +71,7 @@ public class DAORutasNotas {
     public int eliminar (int id){
 
         String[] argumentos = {String.valueOf(id)};
-        return _sqLiteDatabase.delete(BD.TABLE_NAME_RUTAS_NOTAS, "_id = ?", argumentos);
+        return _sqLiteDatabase.delete(BD.TABLE_NAME_RUTASN, "_id = ?", argumentos);
 
     }
 }

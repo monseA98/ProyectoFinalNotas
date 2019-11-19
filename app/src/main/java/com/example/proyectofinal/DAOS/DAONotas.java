@@ -108,4 +108,33 @@ public class DAONotas {
         return notas;
     }
 
+    public ArrayList<Integer> buscarUltimoId(String[] id){
+        ArrayList<Integer> notas = new ArrayList<>();
+
+        String[] columnasAConsultar = {BD.COLUMNS_NAME_NOTAS[0]};
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_NOTAS, columnasAConsultar, "_id = ? ", id, null, null, null);
+
+        if(id[0].equals("")){
+
+            cursor = _sqLiteDatabase.query(BD.TABLE_NAME_NOTAS, columnasAConsultar, null, null, null, null, null);
+        }
+
+        if (cursor == null){
+            return notas;
+        }
+
+        if (!cursor.moveToFirst()) return notas;
+
+        do {
+
+            int idObtenidoDeBD = cursor.getInt(0);
+
+            notas.add(idObtenidoDeBD);
+
+        } while (cursor.moveToNext());
+
+        cursor.close();
+        return notas;
+    }
+
 }
