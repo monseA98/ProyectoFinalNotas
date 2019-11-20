@@ -107,7 +107,6 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     public void onClick(View view) {
         if(view == btnInsertar){
             insert(view);
-            //insertRutas();
         }
 
         if(view == btnFecha){
@@ -137,21 +136,6 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         Toast.makeText(this, "Se inserto la tarea "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
-    /*private void insertRutas(){
-        if(listaRutas!=null) {
-            for (int i = 0; i < listaRutas.size()-1; i++) {
-
-                Ruta ruta = new Ruta(0, listaRutas.get(i), tarea.getId());
-                DAORutas dao = new DAORutas(this);
-                dao.insert(ruta);
-                Toast.makeText(this, "Se inserto la ruta " + listaRutas.get(i), Toast.LENGTH_SHORT).show();
-            }
-        }else{
-            finish();
-        }
-        finish();
-
-    }*/
 
     private void abrirCalenadario() {
         Calendar c = Calendar.getInstance();

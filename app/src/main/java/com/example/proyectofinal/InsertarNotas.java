@@ -95,7 +95,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         if(view == btnInsertar){
             insert(view);
-            insertRutas();
+            insertRutas(view);
 
         }
 
@@ -123,7 +123,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         //Toast.makeText(this, "Se inserto la nota "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
-    private void insertRutas(){
+    private void insertRutas(View view){
 
         String[] Notas1 = {""};
 
@@ -135,15 +135,21 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         if(listaRutas!=null) {
             for (int i = 0; i < listaRutas.size(); i++) {
 
-                Ruta ruta = new Ruta(0, listaRutas.get(i), 1 ,arrayIds.get(arrayIds.size()-1));
-                DAORutas dao = new DAORutas(this);
+                Ruta ruta = new Ruta(0, listaRutas.get(i) ,arrayIds.get(arrayIds.size()-1));
+                DAORutasNotas daoRutasNotas = new DAORutasNotas(this);
 
-                dao.insert(ruta);
+                switch (view.getId()) {
+                    case R.id.btnInsertarNota:
+                        daoRutasNotas.insert(ruta);
+                        Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"tipo= 1"+" idNota= "+ruta.getIdTarea());
+                        //finish();
+                }
+                //daoRutas.insert(ruta);
                 //Toast.makeText(this, "Se inserto la ruta " + listaRutas.get(i), Toast.LENGTH_SHORT).show();
                 //Log.i("RUTAS", ""+listaRutas.get(i) +" idNota "+nota.getId());
                 Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"tipo= 1"+" idNota= "+ruta.getIdTarea());
-
             }
+
         }else{
             //finish();
         }

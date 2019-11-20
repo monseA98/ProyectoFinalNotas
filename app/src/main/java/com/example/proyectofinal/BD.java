@@ -62,13 +62,12 @@ public class BD extends SQLiteOpenHelper {
     private String SCRIPT_DB_RUTAS = "create table Rutas (" +
             "_id integer primary key autoincrement," +
             "ruta text not null," +
-            "tipo int not null," +
             "idTarea int not null, foreign key (idTarea) references Tareas(_id));"
             ;
 
     public static final String[] COLUMNS_NAME_RUTAS =
             {
-                    "_id", "ruta", "tipo", "idTarea"
+                    "_id", "ruta", "idTarea"
             };
 
     public  static final String TABLE_NAME_RUTAS =
@@ -94,7 +93,7 @@ public class BD extends SQLiteOpenHelper {
 
     public BD(@Nullable Context context) {
         super(context,
-                "mibaseD",
+                "databasenotas",
                 null,
                 1);
     }
@@ -110,6 +109,12 @@ public class BD extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        //sqLiteDatabase.execSQL("DROP DATABASE mibaseD");
+        /*sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NOTAS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TAREAS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_RECORDATORIOS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_RUTAS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_RUTASN);
+        onCreate(sqLiteDatabase);*/
     }
 }

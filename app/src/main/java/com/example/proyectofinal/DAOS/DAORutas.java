@@ -29,8 +29,6 @@ public class DAORutas {
         contentValues.put(BD.COLUMNS_NAME_RUTAS[1],
                 path);
         contentValues.put(BD.COLUMNS_NAME_RUTAS[2],
-                ruta.getTipo());
-        contentValues.put(BD.COLUMNS_NAME_RUTAS[3],
                 ruta.getIdTarea());
 
         return  _sqLiteDatabase.insert(BD.TABLE_NAME_RUTAS,
@@ -59,10 +57,9 @@ public class DAORutas {
 
             int idObtenidoDeBD = cursor.getInt(0);
             Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            int tipoObtenidodeBD = cursor.getInt(2);
-            int idTareaObtenidoDeBD = cursor.getInt(3);
+            int idTareaObtenidoDeBD = cursor.getInt(2);
 
-            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, tipoObtenidodeBD,idTareaObtenidoDeBD);
+            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, idTareaObtenidoDeBD);
             rutas.add(rutaObtenidoDeBD);
 
         } while (cursor.moveToNext());
@@ -100,10 +97,9 @@ public class DAORutas {
 
             int idObtenidoDeBD = cursor.getInt(0);
             Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            int tipoObtenidodeBD = cursor.getInt(2);
-            int idTareaObtenidoDeBD = cursor.getInt(3);
+            int idTareaObtenidoDeBD = cursor.getInt(2);
 
-            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, tipoObtenidodeBD,idTareaObtenidoDeBD);
+            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD,idTareaObtenidoDeBD);
             rutas.add(pathObtenidoDeBD);
 
         } while (cursor.moveToNext());

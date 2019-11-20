@@ -35,7 +35,7 @@ public class DAORutasNotas {
                 null, contentValues);
     }
 
-    public ArrayList<Uri> buscar(String[] id){
+    public ArrayList<Uri> buscarRutas(String[] id){
         ArrayList<Uri> rutas = new ArrayList<>();
 
         ////////////////
@@ -55,11 +55,8 @@ public class DAORutasNotas {
 
         do {
 
-            //int idObtenidoDeBD = cursor.getInt(0);
             Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            //int idTareaObtenidoDeBD = cursor.getInt(2);
 
-            //Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, idTareaObtenidoDeBD);
             rutas.add(pathObtenidoDeBD);
 
         } while (cursor.moveToNext());

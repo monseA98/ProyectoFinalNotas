@@ -5,13 +5,11 @@ import android.net.Uri;
 public class Ruta {
     int id;
     Uri ruta; // o String?
-    int tipo;
     int idTarea;
 
-    public Ruta(int id, Uri ruta, int tipo, int idTarea) {
+    public Ruta(int id, Uri ruta, int idTarea) {
         this.id = id;
         this.ruta = ruta;
-        this.tipo = tipo;
         this.idTarea = idTarea;
     }
 
@@ -39,11 +37,4 @@ public class Ruta {
         this.idTarea = idTarea;
     }
 
-    public int getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
-    }
 }

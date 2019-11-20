@@ -43,7 +43,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
         nota = (Nota)getIntent().getExtras().getSerializable("nota");
 
-        rutas();
+        obtenerRutas();
 
         txtTitulo = findViewById(R.id.txtTituloNotaAct);
         txtTitulo.setText(nota.getTitulo().toString());
@@ -81,15 +81,16 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void rutas(){
-        DAORutas daoRutas = new DAORutas(this);
+    private void obtenerRutas(){
+        DAORutasNotas daoRutasNotas = new DAORutasNotas(this);
+        //DAORutas dao = new DAORutas(this);
         String[] idNota = {""};
-        idNota[0] = ""+nota.getId(); //para pasarselo al de buscar y que busque todas las rutas con el id de la Nota
+        idNota[0] = ""+nota.getId(); //para pasarle el Id de la Nota al de buscar y que busque todas las rutas con el id de la Nota
 
-        Toast.makeText(this, "Size "+daoRutas.buscar(idNota).size(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Size "+daoRutasNotas.buscarRutas(idNota).size(), Toast.LENGTH_SHORT).show();
 
-        for(int i=0; i<daoRutas.buscar(idNota).size(); i++){
-            listaRutas.add(daoRutas.buscarRutas(idNota).get(i));
+        for(int i=0; i<daoRutasNotas.buscarRutas(idNota).size(); i++){
+            listaRutas.add(daoRutasNotas.buscarRutas(idNota).get(i));
         }
         //Toast.makeText(this, "Size "+listaRutas.size(), Toast.LENGTH_SHORT).show();
     }

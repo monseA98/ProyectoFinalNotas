@@ -65,7 +65,6 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if(view == btnActualizar){
             actualizar(view);
-            //insertRutas(ruta);
         }
 
         if(view == btnFecha){
