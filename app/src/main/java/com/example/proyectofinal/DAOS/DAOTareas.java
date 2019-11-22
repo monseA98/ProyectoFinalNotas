@@ -91,4 +91,33 @@ public class DAOTareas {
         cursor.close();
         return tareas;
     }
+
+    public ArrayList<Integer> buscarUltimoId(String[] id){
+        ArrayList<Integer> tareas = new ArrayList<>();
+
+        String[] columnasAConsultar = {BD.COLUMNS_NAME_TAREAS[0]};
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_TAREAS, columnasAConsultar, "_id = ? ", id, null, null, null);
+
+        if(id[0].equals("")){
+
+            cursor = _sqLiteDatabase.query(BD.TABLE_NAME_TAREAS, columnasAConsultar, null, null, null, null, null);
+        }
+
+        if (cursor == null){
+            return tareas;
+        }
+
+        if (!cursor.moveToFirst()) return tareas;
+
+        do {
+
+            int idObtenidoDeBD = cursor.getInt(0);
+
+            tareas.add(idObtenidoDeBD);
+
+        } while (cursor.moveToNext());
+
+        cursor.close();
+        return tareas;
+    }
 }

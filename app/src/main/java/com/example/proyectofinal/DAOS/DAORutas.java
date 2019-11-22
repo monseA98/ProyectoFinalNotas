@@ -29,13 +29,15 @@ public class DAORutas {
         contentValues.put(BD.COLUMNS_NAME_RUTAS[1],
                 path);
         contentValues.put(BD.COLUMNS_NAME_RUTAS[2],
+                ruta.getDescripcion());
+        contentValues.put(BD.COLUMNS_NAME_RUTAS[3],
                 ruta.getIdTarea());
 
         return  _sqLiteDatabase.insert(BD.TABLE_NAME_RUTAS,
                 null, contentValues);
     }
 
-    public ArrayList<Ruta> buscar(String[] id){
+    public ArrayList<Ruta> buscarObjeto(String[] id){
         ArrayList<Ruta> rutas = new ArrayList<>();
 
         ////////////////
@@ -57,9 +59,10 @@ public class DAORutas {
 
             int idObtenidoDeBD = cursor.getInt(0);
             Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            int idTareaObtenidoDeBD = cursor.getInt(2);
+            String descripcionObtenidoDeBD = cursor.getString(2);
+            int idTareaObtenidoDeBD = cursor.getInt(3);
 
-            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, idTareaObtenidoDeBD);
+            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, descripcionObtenidoDeBD, idTareaObtenidoDeBD);
             rutas.add(rutaObtenidoDeBD);
 
         } while (cursor.moveToNext());
@@ -78,7 +81,6 @@ public class DAORutas {
     public ArrayList<Uri> buscarRutas(String[] id){
         ArrayList<Uri> rutas = new ArrayList<>();
 
-        ////////////////
         String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTAS[1]};
         Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS, columnasAConsultar, "idTarea = ?", id, null, null, null);
 
@@ -95,11 +97,8 @@ public class DAORutas {
 
         do {
 
-            int idObtenidoDeBD = cursor.getInt(0);
-            Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            int idTareaObtenidoDeBD = cursor.getInt(2);
+            Uri pathObtenidoDeBD = Uri.parse(cursor.getString(0));
 
-            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD,idTareaObtenidoDeBD);
             rutas.add(pathObtenidoDeBD);
 
         } while (cursor.moveToNext());

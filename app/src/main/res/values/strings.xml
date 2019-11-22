@@ -1,8 +1,41 @@
 <resources>
     <string name="app_name">ProyectoFinal</string>
     <string name="action_settings">Settings</string>
+    <string name="txt_btnInsertar">Insertar</string>
+    <string name="txt_btnActualizar">Actualizar</string>
+    <string name="txt_titulo">Título</string>
+    <string name="txt_descripcion">Descripción</string>
+
+    <string name="txt_btnFecha">Fecha y hr</string>
+    <string name="txt_btnRecordatorios">Recordatorios+</string>
+
+    <string name="txt_btnBuscar">Buscar</string>
+
+    <string name="seleccione_aplicacion">Seleccione la aplicación</string>
+
+    <string name="seleccione_opcion">Selecciona una opción</string>
+    <string name="adjuntar_foto">Adjuntar Foto</string>
+    <string name="adjuntar_video">Adjuntar Vídeo</string>
+    <string name="tomar_foto">Tomar Foto</string>
+    <string name="tomar_video">Tomar Vídeo</string>
+
+    <string name="grabando">Grabando...</string>
+    <string name="grab_finalizada">Grabación finalizada</string>
+
+    <string name="menu_contex_eliminar">Eliminar</string>
+    <string name="menu_contex_actualizar">Actualizar</string>
+
+    <string name="titulo_dialog_descripcion">Agregar una descripción</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="btn_confirmar">Confirmar</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="stringnotas">Fragment Notas</string>
-    <string name="stringtareas">Fragment Tareas</string>
+    <string name="stringnotas">Fragmento Notas</string>
+    <string name="stringtareas">Fragmento Tareas</string>
+
+    <string name="txt_buscar">Título o descripción</string>
+
+    <string name="notas">Notas</string>
+    <string name="tareas">Tareas</string>
+    <string name="reproduciendo">Reproduciendo último audio</string>
 </resources>

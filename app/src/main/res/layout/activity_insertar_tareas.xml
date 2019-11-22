@@ -17,11 +17,11 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="92dp"
         android:layout_marginLeft="92dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="92dp"
         android:layout_marginRight="92dp"
         android:ems="10"
-        android:hint="Titulo"
+        android:hint="@string/txt_titulo"
         android:inputType="textPersonName" />
 
     <EditText
@@ -40,8 +40,40 @@
         android:layout_marginRight="92dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Descripción"
+        android:hint="@string/txt_descripcion"
         android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/btnFecha"
+        android:layout_width="224dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtDescripTarea"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="92dp"
+        android:layout_marginLeft="92dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="92dp"
+        android:layout_marginRight="95dp"
+        android:text="@string/txt_btnFecha" />
+
+    <Button
+        android:id="@+id/btnRecordatorios"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnFecha"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="92dp"
+        android:layout_marginLeft="92dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="92dp"
+        android:layout_marginRight="94dp"
+        android:text="@string/txt_btnRecordatorios" />
 
     <Button
         android:id="@+id/btnInsertarTarea"
@@ -53,14 +85,14 @@
         android:layout_marginEnd="38dp"
         android:layout_marginRight="38dp"
         android:layout_marginBottom="24dp"
-        android:text="Insertar" />
+        android:text="@string/txt_btnInsertar" />
 
     <ImageButton
         android:id="@+id/btnAdjuntarTarea"
         android:layout_width="48dp"
         android:layout_height="46dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="23dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginRight="23dp"
         android:layout_marginBottom="25dp"
         android:layout_toStartOf="@+id/btnFotoTarea"
@@ -83,43 +115,38 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
 
-    <Button
-        android:id="@+id/btnFecha"
-        android:layout_width="216dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtDescripTarea"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="92dp"
-        android:layout_marginLeft="92dp"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginRight="94dp"
-        android:text="Fecha y Hr" />
+    <ImageButton
+        android:id="@+id/btnAudioTarea"
+        android:layout_width="48dp"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toStartOf="@+id/btnAdjuntarTarea"
+        android:layout_toLeftOf="@+id/btnAdjuntarTarea"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_mic_black_24dp" />
 
-    <Button
-        android:id="@+id/btnRecordatorios"
-        android:layout_width="216dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnFecha"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="92dp"
-        android:layout_marginLeft="94dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginRight="94dp"
-        android:text="Recordatorios +" />
+    <ImageButton
+        android:id="@+id/btnProbar"
+        android:layout_width="48dp"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="-23dp"
+        android:layout_marginRight="-23dp"
+        android:layout_marginBottom="59dp"
+        android:layout_toStartOf="@+id/btnAudioTarea"
+        android:layout_toLeftOf="@+id/btnAudioTarea"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_mic_black_24dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="wrap_content"
-        android:layout_height="378dp"
-        android:layout_above="@+id/btnFotoTarea"
+        android:layout_height="290dp"
         android:layout_below="@+id/btnRecordatorios"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -129,7 +156,6 @@
         android:layout_marginLeft="82dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="52dp"
-        android:layout_marginRight="89dp"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginRight="52dp" />
 
 </RelativeLayout>

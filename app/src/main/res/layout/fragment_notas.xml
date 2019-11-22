@@ -17,7 +17,7 @@
         android:layout_marginLeft="22dp"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="Titulo"
+        android:hint="@string/txt_buscar"
         android:inputType="textPersonName" />
 
     <Button
@@ -30,7 +30,7 @@
         android:layout_marginBottom="0dp"
         android:layout_toEndOf="@+id/editText"
         android:layout_toRightOf="@+id/editText"
-        android:text="Buscar" />
+        android:text="@string/txt_btnBuscar" />
 
     <ListView
         android:layout_width="wrap_content"

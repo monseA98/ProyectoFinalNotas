@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -16,7 +19,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -34,7 +40,9 @@ import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.proyectofinal.DAOS.DAONotas;
 import com.example.proyectofinal.DAOS.DAORutas;
+import com.example.proyectofinal.DAOS.DAORutasNotas;
 import com.example.proyectofinal.DAOS.DAOTareas;
 
 import java.io.File;
@@ -45,12 +53,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class activity_insertar_tareas extends AppCompatActivity implements View.OnClickListener {
+public class activity_insertar_tareas extends AppCompatActivity implements View.OnClickListener, ExampleDialog.ExampleDilaogListener {
 
     ImageButton btnAdjuntar;
     ImageButton btnFoto;
+    ImageButton btnAudio;
+    ImageButton prueba;
     Button btnFecha;
     Button btnInsertar;
     EditText txtTitulo, txtDescripcion;
@@ -63,10 +74,13 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     Uri ruta;
     Uri path;
 
+    String descripcion; // descripcion de imagen/video/audio
+
     ArrayList<Uri> listaRutas = new ArrayList<>();
 
     private static final int cod_adjuntar = 10;
     private static final int cod_adjuntarVideo = 20;
+    private static final int cod_adjuntarAudio = 30;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 2;
@@ -84,21 +98,31 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
         btnAdjuntar = (ImageButton) findViewById(R.id.btnAdjuntarTarea);
         btnFoto = (ImageButton) findViewById(R.id.btnFotoTarea);
+        btnAudio = findViewById(R.id.btnAudioTarea);
         btnFecha = findViewById(R.id.btnFecha);
         btnInsertar = findViewById(R.id.btnInsertarTarea);
         btnAdjuntar.setOnClickListener(this);
         btnFecha.setOnClickListener(this);
         btnFoto.setOnClickListener(this);
+        btnAudio.setOnClickListener(this);
         btnInsertar.setOnClickListener(this);
+
+        prueba = findViewById(R.id.btnProbar);
+        prueba.setOnClickListener(this);
 
         if (validarPermisos()) {
             btnFoto.setEnabled(true);
+            btnAdjuntar.setEnabled(true);
+            permisosAudio();
         } else {
             btnFoto.setEnabled(false);
+            btnAdjuntar.setEnabled(false);
         }
 
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        //openDialog();
 
     }
 
@@ -107,6 +131,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     public void onClick(View view) {
         if(view == btnInsertar){
             insert(view);
+            insertRutas(view);
         }
 
         if(view == btnFecha){
@@ -118,8 +143,16 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             dialogoAdjuntar();
         }
 
+        if(view == btnAudio) {
+            grabarAudio(view);
+        }
+
         if(view == btnFoto) {
             dialogoTomar();
+        }
+
+        if(view == prueba) {
+            reproducirAudio(view);
         }
     }
 
@@ -136,6 +169,35 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         Toast.makeText(this, "Se inserto la tarea "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
+    private void insertRutas(View view){
+
+        String[] Tareas1 = {""};
+
+        DAOTareas daoTareas = new DAOTareas(this);
+
+        ArrayList<Integer> arrayIds = new ArrayList<>();
+        arrayIds = daoTareas.buscarUltimoId(Tareas1); //El array que me guarda todos los ids de las Tareas
+
+        if(listaRutas!=null) {
+            for (int i = 0; i < listaRutas.size(); i++) {
+
+                Ruta ruta = new Ruta(0, listaRutas.get(i),null ,arrayIds.get(arrayIds.size()-1));
+                DAORutas daoRutas = new DAORutas(this);
+
+                switch (view.getId()) {
+                    case R.id.btnInsertarNota:
+                        daoRutas.insert(ruta);
+                        Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"tipo= 1"+" idNota= "+ruta.getIdTarea());
+                        //finish();
+                }
+                Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"tipo= 1"+" idNota= "+ruta.getIdTarea());
+            }
+
+        }else{
+            //finish();
+        }
+        finish();
+    }
 
     private void abrirCalenadario() {
         Calendar c = Calendar.getInstance();
@@ -195,10 +257,10 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     }
 
     private void dialogoTomar (){
-        final CharSequence[] items = {"Tomar foto", "Tomar vídeo"};
+        final CharSequence[] items = {getString(R.string.tomar_foto), getString(R.string.tomar_video)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Seleccione una opción");
+        builder.setTitle(getString(R.string.seleccione_opcion));
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -217,10 +279,10 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     }
 
     private void dialogoAdjuntar (){
-        final CharSequence[] items = {"Adjunatar foto", "Adjuntar vídeo"};
+        final CharSequence[] items = {getString(R.string.adjuntar_foto), getString(R.string.adjuntar_video)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Seleccione una opción");
+        builder.setTitle(getString(R.string.seleccione_opcion));
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -232,6 +294,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                 if(item==1){
                     cargarVideo();
                 }
+
             }
         });
         AlertDialog alert = builder.create();
@@ -281,13 +344,19 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     private void cargarImagen() {
         Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intentGaleria.setType("image/");
-        startActivityForResult(intentGaleria.createChooser(intentGaleria,"Seleccione la aplicacion"),cod_adjuntar);
+        startActivityForResult(intentGaleria.createChooser(intentGaleria,getString(R.string.seleccione_aplicacion)),cod_adjuntar);
     }
 
     private void cargarVideo() {
         Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         intentGaleria.setType("video/");
-        startActivityForResult(intentGaleria.createChooser(intentGaleria,"Seleccione la aplicacion"),cod_adjuntarVideo);
+        startActivityForResult(intentGaleria.createChooser(intentGaleria,getString(R.string.seleccione_aplicacion)),cod_adjuntarVideo);
+    }
+
+    private void cargarAudio() {
+        Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        intentGaleria.setType("audio/");
+        startActivityForResult(intentGaleria.createChooser(intentGaleria,getString(R.string.seleccione_aplicacion)),cod_adjuntarAudio);
     }
 
     static final int REQUEST_VIDEO_CAPTURE = 3;
@@ -308,19 +377,17 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         if(requestCode ==  REQUEST_TAKE_PHOTO && resultCode== RESULT_OK){
             Toast.makeText(this, "path "+currentPhotoPath, Toast.LENGTH_SHORT).show();
 
-            //no se si funcione
             listaRutas.add(Uri.parse(currentPhotoPath));
 
-            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
-            //
         }
 
         if(requestCode==cod_adjuntar && resultCode==RESULT_OK){
             path =  data.getData(); //obtiene la ruta de la imagen seleccionada
             listaRutas.add(path);
 
-            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
         }
 
@@ -328,7 +395,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             listaRutas.add(videoUri);
 
-            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
@@ -339,7 +406,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             listaRutas.add(videoUri);
 
-            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
@@ -355,6 +422,12 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             return true;
         }
 
+
+        if( (checkSelfPermission(RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) &&
+                (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+            return true;
+        }
+
         if( (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) &&
                 (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
             return true;
@@ -364,7 +437,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                 (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) ){
             cargarDialogoRecomendacion();
         }else{
-            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,CAMERA}, 100);
+            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,CAMERA,RECORD_AUDIO}, 100);
         }
 
         return false;
@@ -375,9 +448,10 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if(requestCode==100){
-            if(grantResults.length==2 && grantResults[0]==PackageManager.PERMISSION_GRANTED &&
+            if(grantResults.length==3 && grantResults[0]==PackageManager.PERMISSION_GRANTED &&
                     grantResults[1]==PackageManager.PERMISSION_GRANTED){
                 btnFoto.setEnabled(true);
+                btnAdjuntar.setEnabled(true);
             }else{
                 //solicitarPermisosManual();
             }
@@ -399,14 +473,67 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         dialogo.show();
     }
 
-    public void createAlarm(String message, int hour, int minutes) {
-        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
-                .putExtra(AlarmClock.EXTRA_MESSAGE, message)
-                .putExtra(AlarmClock.EXTRA_HOUR, hour)
-                .putExtra(AlarmClock.EXTRA_MINUTES, minutes);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+
+    //para agregar una descripcion despues de adjuntar o tomar algo, con un dialogo
+    public void openDialog(){
+        ExampleDialog exampleDialog = new ExampleDialog();
+        exampleDialog.show(getSupportFragmentManager(), "example dialog");
+    }
+
+    @Override
+    public void applyTexts(String descripcion) {
+        txtDescripcion.setText(descripcion); //solo para probar si obtiene
+        this.descripcion = descripcion; // la variable global descripcion obtiene el valor de lo que hay en el input del Dialog
+    }
+
+    public void permisosAudio(){ //posiblemente no funciona
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 1000);
         }
     }
 
+    private MediaRecorder grabacion=null;
+    private String archivoSalida = null;
+
+    public void grabarAudio(View view){
+        if(grabacion==null){
+            archivoSalida = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Grabacion.mp3";
+            grabacion = new MediaRecorder();
+            grabacion.setAudioSource(MediaRecorder.AudioSource.MIC);
+            grabacion.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            grabacion.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+            grabacion.setOutputFile(archivoSalida);
+
+            try{
+                grabacion.prepare();
+                grabacion.start(); //comenzar a grabar
+            }catch (IOException e){
+
+            }
+            btnAudio.setColorFilter(Color.argb(255, 255, 0, 0)); // Cuando este grabando lo pongo color rojo
+            Toast.makeText(getApplicationContext(),getString(R.string.grabando),Toast.LENGTH_SHORT).show();
+
+        }else if(grabacion!=null){
+            grabacion.stop();
+            grabacion.release();
+            grabacion = null; //para que pueda volver a grabar si se presiona el boton nuevamente
+            btnAudio.setColorFilter(Color.argb(255, 0, 0, 0)); // ya no grabando, regresa a color negro
+            Toast.makeText(getApplicationContext(),getString(R.string.grab_finalizada),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void reproducirAudio(View view){
+        MediaPlayer mediaPlayer = new MediaPlayer();
+
+        try{
+            mediaPlayer.setDataSource(archivoSalida);
+            mediaPlayer.prepare();
+        }catch (IOException e){
+
+        }
+        mediaPlayer.start();
+        Toast.makeText(getApplicationContext(),getString(R.string.reproduciendo),Toast.LENGTH_SHORT).show();
+    }
 }

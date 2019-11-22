@@ -62,12 +62,13 @@ public class BD extends SQLiteOpenHelper {
     private String SCRIPT_DB_RUTAS = "create table Rutas (" +
             "_id integer primary key autoincrement," +
             "ruta text not null," +
+            "descripcion text," +
             "idTarea int not null, foreign key (idTarea) references Tareas(_id));"
             ;
 
     public static final String[] COLUMNS_NAME_RUTAS =
             {
-                    "_id", "ruta", "idTarea"
+                    "_id", "ruta", "descripcion", "idTarea"
             };
 
     public  static final String TABLE_NAME_RUTAS =
@@ -79,12 +80,13 @@ public class BD extends SQLiteOpenHelper {
     private String SCRIPT_DB_RUTASN = "create table RutasNotas (" +
             "_id integer primary key autoincrement," +
             "ruta text not null," +
+            "descripcion text," +
             "_idNota int not null, foreign key (_idNota) references Notas(_id));"
             ;
 
     public static final String[] COLUMNS_NAME_RUTASN =
             {
-                    "_id", "ruta", "_idNota"
+                    "_id", "ruta", "descripcion", "_idNota"
             };
 
     public  static final String TABLE_NAME_RUTASN =
@@ -109,12 +111,6 @@ public class BD extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //sqLiteDatabase.execSQL("DROP DATABASE mibaseD");
-        /*sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NOTAS);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TAREAS);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_RECORDATORIOS);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_RUTAS);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_RUTASN);
-        onCreate(sqLiteDatabase);*/
+
     }
 }

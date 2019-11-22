@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FinalProject</string>
+    <string name="action_settings">Settings</string>
+    <string name="adjuntar_foto">Attach Photo</string>
+    <string name="adjuntar_video">Attach Video</string>
+    <string name="btn_cancelar">Cancel</string>
+    <string name="btn_confirmar">Ok</string>
+    <string name="grab_finalizada">Recording finished</string>
+    <string name="grabando">Recording...</string>
+    <string name="menu_contex_actualizar">Update</string>
+    <string name="menu_contex_eliminar">Delete</string>
+    <string name="notas">Notes</string>
+    <string name="reproduciendo">Playing last audio</string>
+    <string name="seleccione_aplicacion">Select application</string>
+    <string name="seleccione_opcion">Select option</string>
+    <string name="stringnotas">Fragment Notes</string>
+    <string name="stringtareas">Fragment Tasks</string>
+    <string name="tareas">Tasks</string>
+    <string name="titulo_dialog_descripcion">Add a description</string>
+    <string name="tomar_foto">Take Photo</string>
+    <string name="tomar_video">Take Video</string>
+    <string name="txt_btnActualizar">Update</string>
+    <string name="txt_btnBuscar">Search</string>
+    <string name="txt_btnFecha">Date and hour</string>
+    <string name="txt_btnInsertar">Insert</string>
+    <string name="txt_btnRecordatorios">Reminders+</string>
+    <string name="txt_buscar">Title or description</string>
+    <string name="txt_descripcion">Description</string>
+    <string name="txt_titulo">Title</string>
+</resources>

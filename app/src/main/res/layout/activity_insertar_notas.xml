@@ -21,7 +21,7 @@
         android:layout_marginEnd="92dp"
         android:layout_marginRight="106dp"
         android:ems="10"
-        android:hint="Titulo"
+        android:hint="@string/txt_titulo"
         android:inputType="textPersonName" />
 
     <EditText
@@ -40,7 +40,7 @@
         android:layout_marginRight="106dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Descripcion"
+        android:hint="@string/txt_descripcion"
         android:inputType="textMultiLine" />
 
     <Button
@@ -53,14 +53,14 @@
         android:layout_marginEnd="38dp"
         android:layout_marginRight="38dp"
         android:layout_marginBottom="24dp"
-        android:text="Insertar" />
+        android:text="@string/txt_btnInsertar" />
 
     <ImageButton
         android:id="@+id/btnAdjuntarNota"
         android:layout_width="48dp"
         android:layout_height="46dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="41dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginRight="41dp"
         android:layout_marginBottom="26dp"
         android:layout_toStartOf="@+id/btnFotoNota"
@@ -74,7 +74,7 @@
         android:layout_width="48dp"
         android:layout_height="46dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="36dp"
         android:layout_marginRight="50dp"
         android:layout_marginBottom="27dp"
         android:layout_toStartOf="@+id/btnInsertarNota"
@@ -82,6 +82,20 @@
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/btnAudioNota"
+        android:layout_width="48dp"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toStartOf="@+id/btnAdjuntarNota"
+        android:layout_toLeftOf="@+id/btnAdjuntarNota"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_mic_black_24dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"

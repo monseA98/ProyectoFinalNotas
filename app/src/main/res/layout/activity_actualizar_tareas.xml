@@ -21,7 +21,7 @@
         android:layout_marginEnd="94dp"
         android:layout_marginRight="94dp"
         android:ems="10"
-        android:hint="Titulo"
+        android:hint="@string/txt_titulo"
         android:inputType="textPersonName" />
 
     <EditText
@@ -40,7 +40,7 @@
         android:layout_marginRight="94dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Descripción"
+        android:hint="@string/txt_descripcion"
         android:inputType="textMultiLine" />
 
     <Button
@@ -53,14 +53,14 @@
         android:layout_marginEnd="38dp"
         android:layout_marginRight="38dp"
         android:layout_marginBottom="24dp"
-        android:text="Actualizar" />
+        android:text="@string/txt_btnActualizar" />
 
     <ImageButton
         android:id="@+id/btnAdjuntarTareaAct"
         android:layout_width="48dp"
         android:layout_height="46dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="23dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginRight="23dp"
         android:layout_marginBottom="25dp"
         android:layout_toStartOf="@+id/btnFotoTareaAct"
@@ -68,6 +68,20 @@
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_attach_file_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/btnAudioTareaAct"
+        android:layout_width="48dp"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toStartOf="@+id/btnAdjuntarTareaAct"
+        android:layout_toLeftOf="@+id/btnAdjuntarTareaAct"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_mic_black_24dp" />
 
     <ImageButton
         android:id="@+id/btnFotoTareaAct"
@@ -97,7 +111,7 @@
         android:layout_marginTop="33dp"
         android:layout_marginEnd="94dp"
         android:layout_marginRight="94dp"
-        android:text="Fecha y Hr" />
+        android:text="@string/txt_btnFecha" />
 
     <Button
         android:id="@+id/btnRecordatoriosAct"
@@ -110,10 +124,10 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="94dp"
         android:layout_marginLeft="94dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="94dp"
         android:layout_marginRight="94dp"
-        android:text="Recordatorios +" />
+        android:text="@string/txt_btnRecordatorios" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerTareaAct"
