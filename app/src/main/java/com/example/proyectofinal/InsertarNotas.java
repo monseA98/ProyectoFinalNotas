@@ -296,7 +296,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         //adjuntar
         if(requestCode== cod_adjuntar && resultCode==RESULT_OK){
             Uri path =  data.getData(); //obtiene la ruta de la imagen seleccionada
-            Model model = new Model(Model.IMAGE_TYPE,"",path);
+            Model model = new Model(Model.IMAGE_TYPE,"Imagen",path);
             listaRutas.add(model);
 
             Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
@@ -316,6 +316,8 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         //TOMAR FOTO O VIDEO
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            listaRutas.add(model);
             //listaRutas.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
@@ -443,6 +445,10 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
             grabacion = null; //para que pueda volver a grabar si se presiona el boton nuevamente
             btnAudio.setColorFilter(Color.argb(255, 0, 0, 0)); // ya no grabando, regresa a color negro
             Toast.makeText(getApplicationContext(),getString(R.string.grab_finalizada),Toast.LENGTH_SHORT).show();
+
+            Model model = new Model(Model.AUDIO_TYPE, "", Uri.parse(archivoSalida));
+            listaRutas.add(model);
+
         }
     }
 
@@ -460,3 +466,4 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
     }
 
 }
+

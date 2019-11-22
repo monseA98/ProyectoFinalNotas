@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.annotation.NonNull;
@@ -47,10 +49,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
             case Model.IMAGE_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false);
-                return new ViewHolder(view);
+                return new ViewHolderImagenes(view);
             case Model.AUDIO_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.audio_type, parent, false);
                 return new ViewHolderAudio(view);
+            case Model.VIDEO_TYPE:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_type, parent, false);
+                return new ViewHolderVideo(view);
         }
 
         return null;
@@ -65,14 +70,18 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
                 return Model.IMAGE_TYPE;
             case 1:
                 return Model.AUDIO_TYPE;
+            case 2:
+                return Model.VIDEO_TYPE;
             default:
                 return -1;
         }
 
     }
 
+
+
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         //holder.myImageView.setImageURI(listaRutas.get(position).data);
         //holder.textImage.setText(listaRutas.get(position).text);
 
@@ -82,8 +91,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
             switch (object.type) {
 
                 case Model.IMAGE_TYPE:
-                    ((ViewHolder) holder).textImage.setText(object.text);
-                    ((ViewHolder) holder).myImageView.setImageURI(object.data);
+                    ((ViewHolderImagenes) holder).textImage.setText(object.text);
+                    ((ViewHolderImagenes) holder).myImageView.setImageURI(object.data);
                     break;
                 case Model.AUDIO_TYPE:
 
@@ -125,6 +134,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
                     });
                     break;
+                case Model.VIDEO_TYPE:
+                    Model model = listaRutas.get(position);
+                    Uri url = model.getData();
+                    ((ViewHolderVideo) holder).videoView.setVideoURI(url);
+                    //MediaController mediaController = new MediaController(context);
+                    //mediaController.setAnchorView(((ViewHolderVideo) holder).videoView);
+                    //((ViewHolderVideo) holder).videoView.setMediaController(mediaController);
+                    //((ViewHolderVideo) holder).videoView.seekTo(10);
+                    ((ViewHolderVideo) holder).videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            mediaPlayer.setLooping(true);
+                            ((ViewHolderVideo) holder).videoView.start();
+                        }
+                    });
+                    break;
+
 
             }
 
@@ -137,10 +163,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
         return listaRutas.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolderImagenes extends RecyclerView.ViewHolder {
         ImageView myImageView;
         TextView textImage;
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolderImagenes(@NonNull View itemView) {
             super(itemView);
             myImageView = itemView.findViewById(R.id.image_selected);
             textImage = itemView.findViewById(R.id.type);
@@ -153,6 +179,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
         public ViewHolderAudio(@NonNull View itemView) {
             super(itemView);
             audio = itemView.findViewById(R.id.fab);
+            textAudio = itemView.findViewById(R.id.type);
+        }
+    }
+
+    public static class ViewHolderVideo extends RecyclerView.ViewHolder {
+        VideoView videoView;
+        TextView textAudio;
+        public ViewHolderVideo(@NonNull View itemView) {
+            super(itemView);
+            videoView = itemView.findViewById(R.id.video_view);
             textAudio = itemView.findViewById(R.id.type);
         }
     }
