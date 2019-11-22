@@ -109,6 +109,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View view) {
         if(view == btnActualizar){
@@ -342,9 +343,11 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
     private MediaRecorder grabacion=null;
     private String archivoSalida = null;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void grabarAudio(View view){
         if(grabacion==null){
-            archivoSalida = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Grabacion.mp3";
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            archivoSalida = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Grabacion_"+timeStamp+".mp3";
             grabacion = new MediaRecorder();
             grabacion.setAudioSource(MediaRecorder.AudioSource.MIC);
             grabacion.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
