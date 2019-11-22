@@ -307,7 +307,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
 
         if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
             //listaRutas.add(Uri.parse(currentPhotoPath));
-            Model model = new Model(0,"",path);
+            Model model = new Model(0,"",Uri.parse(currentPhotoPath));
             listaRutas.add(model);
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
@@ -329,6 +329,8 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            listaRutas.add(model);
             //listaRutas.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);

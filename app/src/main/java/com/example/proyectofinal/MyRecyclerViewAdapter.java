@@ -135,20 +135,20 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
                     });
                     break;
                 case Model.VIDEO_TYPE:
-                    Model model = listaRutas.get(position);
-                    Uri url = model.getData();
-                    ((ViewHolderVideo) holder).videoView.setVideoURI(url);
-                    //MediaController mediaController = new MediaController(context);
-                    //mediaController.setAnchorView(((ViewHolderVideo) holder).videoView);
-                    //((ViewHolderVideo) holder).videoView.setMediaController(mediaController);
-                    //((ViewHolderVideo) holder).videoView.seekTo(10);
-                    ((ViewHolderVideo) holder).videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mediaPlayer) {
-                            mediaPlayer.setLooping(true);
-                            ((ViewHolderVideo) holder).videoView.start();
-                        }
-                    });
+                    //Model model = listaRutas.get(position);
+                    //Uri url = model.getData();
+                    ((ViewHolderVideo) holder).videoView.setVideoURI(object.data);
+                    MediaController mediaController = new MediaController(context);
+                    mediaController.setAnchorView(((ViewHolderVideo) holder).videoView);
+                    ((ViewHolderVideo) holder).videoView.setMediaController(mediaController);
+                    ((ViewHolderVideo) holder).videoView.seekTo(10);
+                    //((ViewHolderVideo) holder).videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    //    @Override
+                    //    public void onPrepared(MediaPlayer mediaPlayer) {
+                    //        mediaPlayer.setLooping(true);
+                    //        ((ViewHolderVideo) holder).videoView.start();
+                    //    }
+                    //});
                     break;
 
 
