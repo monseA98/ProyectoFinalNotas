@@ -59,6 +59,6 @@ public class Tarea implements Serializable {
 
 
     public String toString(){
-        return "Tarea " + id + "\n" + titulo + "\n" + descripcion + "\n" + fecha;
+        return "Tarea " + id + "\n" + titulo + "\n" + descripcion + "\n" + fecha + "\nHr:" + hora;
     }
 }

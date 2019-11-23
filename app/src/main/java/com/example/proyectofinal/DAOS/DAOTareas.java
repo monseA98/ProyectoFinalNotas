@@ -83,7 +83,7 @@ public class DAOTareas {
             String fechaObtenidoDeBD = cursor.getString(3);
             String horaObtenidoDeBD = cursor.getString(4);
 
-            Tarea tareaObtenidoDeBD = new Tarea(idObtenidoDeBD, tituloObtenidoDeBD, descripcionObtenidoDeBD, fechaObtenidoDeBD, fechaObtenidoDeBD);
+            Tarea tareaObtenidoDeBD = new Tarea(idObtenidoDeBD, tituloObtenidoDeBD, descripcionObtenidoDeBD, fechaObtenidoDeBD, horaObtenidoDeBD);
             tareas.add(tareaObtenidoDeBD);
 
         } while (cursor.moveToNext());

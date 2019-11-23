@@ -28,20 +28,23 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, MainActivity.class); //aqui abre la actividad que le indiques cuando se presiona la notificacion
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(Tareas.class);
+        stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
 
         //Bundle g;
         //g.getExtras
+        Bundle bundle = intent.getExtras();
+        String clave = bundle.getString("tarea");
+
 
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification.Builder builder = new Notification.Builder(context);
 
         Notification notification = builder.setContentTitle("Demo App Notification")
-                .setContentText("New Notification From Demo App..")
+                .setContentText("New Notification .. " +clave)
                 .setTicker("New Message Alert!")
-                .setSmallIcon(R.mipmap.ic_launcher) //icono que muestra la notificacion
+                .setSmallIcon(R.drawable.ic_event_black_24dp) //icono que muestra la notificacion
                 .setContentIntent(pendingIntent).build();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

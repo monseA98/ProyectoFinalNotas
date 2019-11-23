@@ -73,7 +73,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     MyRecyclerViewAdapter Imagesadapter;
 
     Tarea tarea;
-    private int day, month, year, hour, min, y;
+    private int day, month, year, hour, min;
     String m,d,fecha, hora, minutos, hr;
     Uri ruta;
     Uri path;
@@ -90,6 +90,8 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 2;
     String currentPhotoPath;
+
+    final Calendar c = Calendar.getInstance();
 
 
     @Override
@@ -138,17 +140,15 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
         Intent notificationIntent = new Intent(this, AlarmReceiver.class);
 
-        notificationIntent.putExtra("Tarea", "tareaNotificacion");
+        notificationIntent.putExtra("tarea", "Realizar Tarea "+tarea.getTitulo());
 
         PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:ii");
-        Calendar cal = Calendar.getInstance();
-        //cal.add(Calendar.SECOND, 5);
+        //Calendar cal = Calendar.getInstance();
 
-        cal.set(year,month,day,hour,min);
+        c.set(year,month,day,hour,min,0);
         //cal.setTime(year,month,day,hour,min);// mandarle objeto de tipo date para que suene la notificacion (tambien puedo madar los parametros separados por comas)
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), broadcast);
 
         Toast.makeText(this, "Se creo la notificacion ", Toast.LENGTH_SHORT).show();
     }
@@ -157,15 +157,16 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     @Override
     public void onClick(View view) {
         if(view == btnInsertar){
-            crearNotificacion(year,month,day,hour,min);
             insert(view);
+            crearNotificacion(year,month,day,hour,min);
             insertRutas(view);
-
+            finish();
         }
 
         if(view == btnFecha){
-            abrirReloj();
-            abrirCalenadario();
+            abrirCalenadario(view);
+            //abrirReloj();
+
         }
 
         if(view == btnAdjuntar) {
@@ -193,7 +194,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         switch (view.getId()) {
             case R.id.btnInsertarTarea:
                 dao.insert(tarea);
-                finish();
+                //finish();
         }
         //Toast.makeText(this, "Se inserto la tarea "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
@@ -225,14 +226,17 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         }else{
             //finish();
         }
-        finish();
+        //finish();
     }
 
-    private void abrirCalenadario() {
-        Calendar c = Calendar.getInstance();
+    private void abrirCalenadario(View view) {
+
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        min = c.get(Calendar.MINUTE);
+
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -251,13 +255,15 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                 //btnFecha.setText(year+"/"+m+"/"+d);
                 fecha= ""+year+"/"+m+"/"+d;
 
+                abrirReloj();
             }
         } ,year,month,day);
         datePickerDialog.show();
+
     }
 
     private void abrirReloj() {
-        final Calendar c = Calendar.getInstance();
+
         hour = c.get(Calendar.HOUR_OF_DAY);
         min = c.get(Calendar.MINUTE);
 
@@ -266,9 +272,9 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 if((hourOfDay+1)<10){
-                    hora = "0"+""+(hourOfDay+1);
+                    hora = "0"+""+(hourOfDay);
                 }else{
-                    hora = ""+(hourOfDay+1);
+                    hora = ""+(hourOfDay);
                 }
                 if(minute<10){
                     minutos = "0"+""+minute;
@@ -276,6 +282,8 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                     minutos= ""+minute;
                 }
                 hr = hora+":"+minutos;
+                min = minute;
+                hour= hourOfDay;
                 btnFecha.setText(fecha+"  "+hr);
 
                 //createAlarm("Soy una alarma",hourOfDay,minute);
