@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +35,7 @@ import android.provider.AlarmClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -69,14 +73,15 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     MyRecyclerViewAdapter Imagesadapter;
 
     Tarea tarea;
-    private int day, month, year, hour, min;
+    private int day, month, year, hour, min, y;
     String m,d,fecha, hora, minutos, hr;
     Uri ruta;
     Uri path;
 
+    ArrayAdapter<Model> adapter;
+    ArrayList<Model> listaRutas = new ArrayList<>();
     String descripcion; // descripcion de imagen/video/audio
-
-    ArrayList<Uri> listaRutas = new ArrayList<>();
+    //ArrayList<Uri> listaRutas = new ArrayList<>();
 
     private static final int cod_adjuntar = 10;
     private static final int cod_adjuntarVideo = 20;
@@ -113,25 +118,49 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         if (validarPermisos()) {
             btnFoto.setEnabled(true);
             btnAdjuntar.setEnabled(true);
-            permisosAudio();
+            btnAudio.setEnabled(true);
         } else {
             btnFoto.setEnabled(false);
             btnAdjuntar.setEnabled(false);
+            btnAudio.setEnabled(false);
         }
 
         recyclerView = findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
         //openDialog();
+    }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void crearNotificacion(int year, int month, int day, int hour, int min){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent notificationIntent = new Intent(this, AlarmReceiver.class);
+
+        notificationIntent.putExtra("Tarea", "tareaNotificacion");
+
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:ii");
+        Calendar cal = Calendar.getInstance();
+        //cal.add(Calendar.SECOND, 5);
+
+        cal.set(year,month,day,hour,min);
+        //cal.setTime(year,month,day,hour,min);// mandarle objeto de tipo date para que suene la notificacion (tambien puedo madar los parametros separados por comas)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+
+        Toast.makeText(this, "Se creo la notificacion ", Toast.LENGTH_SHORT).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View view) {
         if(view == btnInsertar){
+            crearNotificacion(year,month,day,hour,min+2);
             insert(view);
             insertRutas(view);
+
         }
 
         if(view == btnFecha){
@@ -166,7 +195,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                 dao.insert(tarea);
                 finish();
         }
-        Toast.makeText(this, "Se inserto la tarea "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Se inserto la tarea "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
     private void insertRutas(View view){
@@ -181,7 +210,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         if(listaRutas!=null) {
             for (int i = 0; i < listaRutas.size(); i++) {
 
-                Ruta ruta = new Ruta(0, listaRutas.get(i),null ,arrayIds.get(arrayIds.size()-1));
+                Ruta ruta = new Ruta(0, listaRutas.get(i).data,null ,arrayIds.get(arrayIds.size()-1));
                 DAORutas daoRutas = new DAORutas(this);
 
                 switch (view.getId()) {
@@ -373,27 +402,32 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //adjuntar
+        if(requestCode== cod_adjuntar && resultCode==RESULT_OK){
+            Uri path =  data.getData(); //obtiene la ruta de la imagen seleccionada
+            Model model = new Model(Model.IMAGE_TYPE,"Imagen",path);
+            listaRutas.add(model);
 
-        if(requestCode ==  REQUEST_TAKE_PHOTO && resultCode== RESULT_OK){
-            Toast.makeText(this, "path "+currentPhotoPath, Toast.LENGTH_SHORT).show();
+            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            recyclerView.setAdapter(Imagesadapter);
 
-            listaRutas.add(Uri.parse(currentPhotoPath));
+            Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
+        }
 
+        if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
+            //listaRutas.add(Uri.parse(currentPhotoPath));
+            Model model = new Model(0,"",Uri.parse(currentPhotoPath));
+            listaRutas.add(model);
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
         }
 
-        if(requestCode==cod_adjuntar && resultCode==RESULT_OK){
-            path =  data.getData(); //obtiene la ruta de la imagen seleccionada
-            listaRutas.add(path);
-
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
-            recyclerView.setAdapter(Imagesadapter);
-        }
-
+        //TOMAR FOTO O VIDEO
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            listaRutas.add(videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            listaRutas.add(model);
+            //listaRutas.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
@@ -401,10 +435,12 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
         }
 
-        //tomar video desde la camara
+        //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            listaRutas.add(videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            listaRutas.add(model);
+            //listaRutas.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
@@ -421,7 +457,6 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
             return true;
         }
-
 
         if( (checkSelfPermission(RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) &&
                 (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){

@@ -57,12 +57,13 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
     EditText txtTitulo, txtDescripcion;
     RecyclerView recyclerView;
     ImageView imageView;
+
     MyRecyclerViewAdapter Imagesadapter;
+    ArrayAdapter<Model> adapter;
+    ArrayList<Model> listaRutas = new ArrayList<>();
 
     Nota nota;
     Uri path;
-    ArrayAdapter<Model> adapter;
-    ArrayList<Model> listaRutas = new ArrayList<>();
     String descripcion;
 
     static final int REQUEST_TAKE_PHOTO = 2;
@@ -88,10 +89,18 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         btnInsertar.setOnClickListener(this);
         btnAudio.setOnClickListener(this);
 
+        //permisosAudio();
+        //validarPermisos();
+
         if (validarPermisos()) {
             btnFoto.setEnabled(true);
+            btnAudio.setEnabled(true);
+            btnAdjuntar.setEnabled(true);
+
         } else {
             btnFoto.setEnabled(false);
+            btnAudio.setEnabled(false);
+            btnAdjuntar.setEnabled(false);
         }
 
         //imageView = findViewById(R.id.imageView);
@@ -363,7 +372,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
                 (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) ){
             cargarDialogoRecomendacion();
         }else{
-            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,CAMERA}, 100);
+            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,CAMERA,RECORD_AUDIO}, 100);
         }
 
         return false;
@@ -415,6 +424,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 1000);
+
         }
     }
 

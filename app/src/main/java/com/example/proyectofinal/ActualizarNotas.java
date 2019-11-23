@@ -53,11 +53,13 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
     EditText txtTitulo, txtDescripcion;
     RecyclerView recyclerView;
 
+    MyRecyclerViewAdapter Imagesadapter;
+    ArrayAdapter<Model> adapter;
+    ArrayList<Model> listaRutas = new ArrayList<>();
+
     Nota nota;
     Uri path;
-    ArrayAdapter<Uri> adapter;
-    ArrayList<Uri> listaRutas = new ArrayList<>();
-    private MyRecyclerViewAdapter Imagesadapter;
+    //private MyRecyclerViewAdapter Imagesadapter;
     String descripcion;
 
     private static final int cod_adjuntar = 10;
@@ -94,10 +96,10 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
         recyclerView = findViewById(R.id.recyclerNotaAct);
 
-        adapter = new ArrayAdapter<Uri>(this, android.R.layout.simple_list_item_1, listaRutas);
+        //adapter = new ArrayAdapter<Uri>(this, android.R.layout.simple_list_item_1, listaRutas);
         //recyclerView.setAdapter(adapter);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
         //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas); //Despues descomentar
         recyclerView.setAdapter(Imagesadapter);
@@ -179,16 +181,11 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
     private void obtenerRutas(){
         DAORutasNotas daoRutasNotas = new DAORutasNotas(this);
-        //DAORutas dao = new DAORutas(this);
-        String[] idNota = {""+nota.getId()};
-        //idNota[0] = ""+nota.getId(); //para pasarle el Id de la Nota al de buscar y que busque todas las rutas con el id de la Nota
-
-        //Toast.makeText(this, "Size "+daoRutasNotas.buscarRutas(idNota).size(), Toast.LENGTH_SHORT).show();
+        String[] idNota = {""+nota.getId()}; //para pasarle el Id de la Nota al de buscar y que busque todas las rutas con el id de la Nota
 
         for(int i=0; i<daoRutasNotas.buscarRutas(idNota).size(); i++){
-            listaRutas.add(daoRutasNotas.buscarRutas(idNota).get(i));
+            //listaRutas.add(daoRutasNotas.buscarRutas(idNota).get(i)); //DESCOMENTAR DESPUES
         }
-        //Toast.makeText(this, "Size "+listaRutas.size(), Toast.LENGTH_SHORT).show();
     }
 
     private void actualizar(View view){
@@ -268,27 +265,32 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //adjuntar
+        if(requestCode== cod_adjuntar && resultCode==RESULT_OK){
+            Uri path =  data.getData(); //obtiene la ruta de la imagen seleccionada
+            Model model = new Model(Model.IMAGE_TYPE,"Imagen",path);
+            listaRutas.add(model);
 
-        if(requestCode ==  REQUEST_TAKE_PHOTO && resultCode== RESULT_OK){
-            Toast.makeText(this, "path "+currentPhotoPath, Toast.LENGTH_SHORT).show();
+            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            recyclerView.setAdapter(Imagesadapter);
 
-            listaRutas.add(Uri.parse(currentPhotoPath));
+            Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
+        }
 
+        if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
+            //listaRutas.add(Uri.parse(currentPhotoPath));
+            Model model = new Model(0,"",Uri.parse(currentPhotoPath));
+            listaRutas.add(model);
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
         }
 
-        if(requestCode==cod_adjuntar && resultCode==RESULT_OK){
-            path =  data.getData(); //obtiene la ruta de la imagen seleccionada
-            listaRutas.add(path);
-
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
-            recyclerView.setAdapter(Imagesadapter);
-        }
-
+        //TOMAR FOTO O VIDEO
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            listaRutas.add(videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            listaRutas.add(model);
+            //listaRutas.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
@@ -296,16 +298,19 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
         }
 
-        //tomar video desde la camara
+        //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            listaRutas.add(videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            listaRutas.add(model);
+            //listaRutas.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
