@@ -157,7 +157,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     @Override
     public void onClick(View view) {
         if(view == btnInsertar){
-            crearNotificacion(year,month,day,hour,min+2);
+            crearNotificacion(year,month,day,hour,min);
             insert(view);
             insertRutas(view);
 
