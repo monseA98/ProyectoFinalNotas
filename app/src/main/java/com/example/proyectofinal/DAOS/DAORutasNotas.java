@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.example.proyectofinal.BD;
+import com.example.proyectofinal.Model;
 import com.example.proyectofinal.Ruta;
 
 import java.util.ArrayList;
@@ -29,8 +30,10 @@ public class DAORutasNotas {
         contentValues.put(BD.COLUMNS_NAME_RUTASN[1],
                 path);
         contentValues.put(BD.COLUMNS_NAME_RUTASN[2],
+                ruta.getTipo());
+        contentValues.put(BD.COLUMNS_NAME_RUTASN[2],
                 ruta.getDescripcion());
-        contentValues.put(BD.COLUMNS_NAME_RUTASN[3],
+        contentValues.put(BD.COLUMNS_NAME_RUTASN[4],
                 ruta.getIdTarea());
 
         return  _sqLiteDatabase.insert(BD.TABLE_NAME_RUTASN,
@@ -41,8 +44,8 @@ public class DAORutasNotas {
         ArrayList<Ruta> rutas = new ArrayList<>();
 
         ////////////////
-        String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTASN[1]};
-        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTASN, columnasAConsultar, "idTarea = ?", id, null, null, null);
+        String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTASN[0],BD.COLUMNS_NAME_RUTASN[1],BD.COLUMNS_NAME_RUTASN[2],BD.COLUMNS_NAME_RUTASN[3],BD.COLUMNS_NAME_RUTASN[4]};
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTASN, columnasAConsultar, "_idNota = ?", id, null, null, null);
 
         if(id[0].equals("")){
 
@@ -59,10 +62,11 @@ public class DAORutasNotas {
 
             int idObtenidoDeBD = cursor.getInt(0);
             Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            String descripcionObtenidoDeBD = cursor.getString(2);
-            int idTareaObtenidoDeBD = cursor.getInt(3);
+            int tipoObtenidoDeBD = cursor.getInt(2);
+            String descripcionObtenidoDeBD = cursor.getString(3);
+            int idTareaObtenidoDeBD = cursor.getInt(4);
 
-            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, descripcionObtenidoDeBD, idTareaObtenidoDeBD);
+            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, tipoObtenidoDeBD, descripcionObtenidoDeBD, idTareaObtenidoDeBD);
             rutas.add(rutaObtenidoDeBD);
 
         } while (cursor.moveToNext());
@@ -107,4 +111,5 @@ public class DAORutasNotas {
         return _sqLiteDatabase.delete(BD.TABLE_NAME_RUTASN, "_id = ?", argumentos);
 
     }
+
 }

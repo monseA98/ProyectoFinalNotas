@@ -29,6 +29,8 @@ public class DAORutas {
         contentValues.put(BD.COLUMNS_NAME_RUTAS[1],
                 path);
         contentValues.put(BD.COLUMNS_NAME_RUTAS[2],
+                ruta.getTipo());
+        contentValues.put(BD.COLUMNS_NAME_RUTAS[2],
                 ruta.getDescripcion());
         contentValues.put(BD.COLUMNS_NAME_RUTAS[3],
                 ruta.getIdTarea());
@@ -59,10 +61,11 @@ public class DAORutas {
 
             int idObtenidoDeBD = cursor.getInt(0);
             Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            String descripcionObtenidoDeBD = cursor.getString(2);
-            int idTareaObtenidoDeBD = cursor.getInt(3);
+            int tipoObtenidoDeBD = cursor.getInt(2);
+            String descripcionObtenidoDeBD = cursor.getString(3);
+            int idTareaObtenidoDeBD = cursor.getInt(4);
 
-            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, descripcionObtenidoDeBD, idTareaObtenidoDeBD);
+            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, tipoObtenidoDeBD, descripcionObtenidoDeBD, idTareaObtenidoDeBD);
             rutas.add(rutaObtenidoDeBD);
 
         } while (cursor.moveToNext());

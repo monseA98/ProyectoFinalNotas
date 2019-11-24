@@ -82,8 +82,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-        //holder.myImageView.setImageURI(listaRutas.get(position).data);
-        //holder.textImage.setText(listaRutas.get(position).text);
+        //holder.myImageView.setImageURI(listaModelos.get(position).data);
+        //holder.textImage.setText(listaModelos.get(position).text);
 
         final Model object = listaRutas.get(position);
         if (object != null) {
@@ -135,7 +135,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
                     });
                     break;
                 case Model.VIDEO_TYPE:
-                    //Model model = listaRutas.get(position);
+                    //Model model = listaModelos.get(position);
                     //Uri url = model.getData();
                     ((ViewHolderVideo) holder).videoView.setVideoURI(object.data);
                     MediaController mediaController = new MediaController(context);

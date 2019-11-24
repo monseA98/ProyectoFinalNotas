@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,7 +25,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.proyectofinal.DAOS.DAONotas;
-import com.example.proyectofinal.DAOS.DAORutas;
 import com.example.proyectofinal.DAOS.DAORutasNotas;
 
 import java.io.File;
@@ -60,7 +57,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
 
     MyRecyclerViewAdapter Imagesadapter;
     ArrayAdapter<Model> adapter;
-    ArrayList<Model> listaRutas = new ArrayList<>();
+    ArrayList<Model> listaModelos = new ArrayList<>();
 
     Nota nota;
     Uri path;
@@ -105,7 +102,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
 
         //imageView = findViewById(R.id.imageView);
 
-        adapter = new ArrayAdapter<Model>(this, android.R.layout.simple_list_item_1, listaRutas);
+        adapter = new ArrayAdapter<Model>(this, android.R.layout.simple_list_item_1, listaModelos);
         //recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
@@ -124,6 +121,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
 
         if(view == btnAdjuntar) {
             dialogoAdjuntar();
+            openDialog();
         }
 
         if(view == btnFoto) {
@@ -159,11 +157,11 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         ArrayList<Integer> arrayIds = new ArrayList<>();
         arrayIds = daoNotas.buscarUltimoId(Notas1); //El array que me gusrda todos los ids de las Notas
 
-        if(listaRutas!=null) {
-            for (int i = 0; i < listaRutas.size(); i++) {
+        if(listaModelos !=null) {
+            for (int i = 0; i < listaModelos.size(); i++) {
 
 
-                Ruta ruta = new Ruta(0, listaRutas.get(i).data,null ,arrayIds.get(arrayIds.size()-1));
+                Ruta ruta = new Ruta(0, listaModelos.get(i).data, listaModelos.get(i).type, listaModelos.get(i).text ,arrayIds.get(arrayIds.size()-1));
                 DAORutasNotas daoRutasNotas = new DAORutasNotas(this);
 
                 switch (view.getId()) {
@@ -305,20 +303,20 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         //adjuntar
         if(requestCode== cod_adjuntar && resultCode==RESULT_OK){
             Uri path =  data.getData(); //obtiene la ruta de la imagen seleccionada
-            Model model = new Model(Model.IMAGE_TYPE,"Imagen",path);
-            listaRutas.add(model);
+            Model model = new Model(Model.IMAGE_TYPE,descripcion,path);
+            listaModelos.add(model);
 
-            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
         }
 
         if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
-            //listaRutas.add(Uri.parse(currentPhotoPath));
+            //listaModelos.add(Uri.parse(currentPhotoPath));
             Model model = new Model(0,"",Uri.parse(currentPhotoPath));
-            listaRutas.add(model);
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            listaModelos.add(model);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
         }
 
@@ -326,23 +324,24 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
-            listaRutas.add(model);
-            //listaRutas.add(videoUri);
+            listaModelos.add(model);
+            //listaModelos.add(videoUri);
 
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+
         }
 
         //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
-            listaRutas.add(model);
-            //listaRutas.add(videoUri);
+            listaModelos.add(model);
+            //listaModelos.add(videoUri);
 
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
@@ -415,7 +414,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void applyTexts(String descripcion) {
-        txtDescripcion.setText(descripcion); //solo para probar si obtiene
+        //txtDescripcion.setText(descripcion); //solo para probar si obtiene
         this.descripcion = descripcion; // la variable global descripcion obtiene el valor de lo que hay en el input del Dialog
     }
 
@@ -459,7 +458,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
             Toast.makeText(getApplicationContext(),getString(R.string.grab_finalizada),Toast.LENGTH_SHORT).show();
 
             Model model = new Model(Model.AUDIO_TYPE, "", Uri.parse(archivoSalida));
-            listaRutas.add(model);
+            listaModelos.add(model);
 
         }
     }

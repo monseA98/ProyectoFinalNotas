@@ -446,7 +446,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
 
             listaRutas.add(Uri.parse(currentPhotoPath));
 
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
         }
 
@@ -454,7 +454,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
             path =  data.getData(); //obtiene la ruta de la imagen seleccionada
             listaRutas.add(path);
 
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
         }
 
@@ -462,7 +462,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             listaRutas.add(videoUri);
 
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
@@ -473,7 +473,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             listaRutas.add(videoUri);
 
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();

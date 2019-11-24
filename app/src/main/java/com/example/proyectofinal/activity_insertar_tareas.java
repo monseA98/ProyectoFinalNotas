@@ -81,7 +81,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     ArrayAdapter<Model> adapter;
     ArrayList<Model> listaRutas = new ArrayList<>();
     String descripcion; // descripcion de imagen/video/audio
-    //ArrayList<Uri> listaRutas = new ArrayList<>();
+    //ArrayList<Uri> listaModelos = new ArrayList<>();
 
     private static final int cod_adjuntar = 10;
     private static final int cod_adjuntarVideo = 20;
@@ -171,6 +171,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
         if(view == btnAdjuntar) {
             dialogoAdjuntar();
+            openDialog();
         }
 
         if(view == btnAudio) {
@@ -211,7 +212,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         if(listaRutas!=null) {
             for (int i = 0; i < listaRutas.size(); i++) {
 
-                Ruta ruta = new Ruta(0, listaRutas.get(i).data,null ,arrayIds.get(arrayIds.size()-1));
+                Ruta ruta = new Ruta(0, listaRutas.get(i).data, listaRutas.get(i).type, descripcion ,arrayIds.get(arrayIds.size()-1));
                 DAORutas daoRutas = new DAORutas(this);
 
                 switch (view.getId()) {
@@ -423,10 +424,10 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         }
 
         if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
-            //listaRutas.add(Uri.parse(currentPhotoPath));
+            //listaModelos.add(Uri.parse(currentPhotoPath));
             Model model = new Model(0,"",Uri.parse(currentPhotoPath));
             listaRutas.add(model);
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
         }
 
@@ -435,9 +436,9 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
             listaRutas.add(model);
-            //listaRutas.add(videoUri);
+            //listaModelos.add(videoUri);
 
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
@@ -448,9 +449,9 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
             listaRutas.add(model);
-            //listaRutas.add(videoUri);
+            //listaModelos.add(videoUri);
 
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
