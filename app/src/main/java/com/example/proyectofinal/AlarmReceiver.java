@@ -31,8 +31,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
 
-        //Bundle g;
-        //g.getExtras
         Bundle bundle = intent.getExtras();
         String clave = bundle.getString("tarea");
 
@@ -40,9 +38,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification.Builder builder = new Notification.Builder(context);
-
-        Notification notification = builder.setContentTitle("Demo App Notification")
-                .setContentText("New Notification .. " +clave)
+        Notification notification = builder.setContentTitle("Tareas")
+                .setContentText("" +clave)
                 .setTicker("New Message Alert!")
                 .setSmallIcon(R.drawable.ic_event_black_24dp) //icono que muestra la notificacion
                 .setContentIntent(pendingIntent).build();

@@ -59,7 +59,7 @@
         android:layout_marginRight="94dp"
         android:text="@string/txt_btnFecha" />
 
-    <Button
+    <!--<Button
         android:id="@+id/btnRecordatoriosAct"
         android:layout_width="216dp"
         android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="94dp"
         android:layout_marginRight="94dp"
-        android:text="@string/txt_btnRecordatorios" />
+        android:text="@string/txt_btnRecordatorios" />-->
 
     <Button
         android:id="@+id/btnActualizarTarea"
@@ -129,12 +129,29 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <!--<androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerTareaAct"
         android:layout_width="wrap_content"
         android:layout_height="378dp"
         android:layout_above="@+id/btnFotoTareaAct"
         android:layout_below="@+id/btnRecordatoriosAct"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="52dp"
+        android:layout_marginLeft="82dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="89dp"
+        android:layout_marginBottom="30dp" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTareaAct"
+        android:layout_width="wrap_content"
+        android:layout_height="378dp"
+        android:layout_above="@+id/btnFotoTareaAct"
+        android:layout_below="@+id/btnFechaAct"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"

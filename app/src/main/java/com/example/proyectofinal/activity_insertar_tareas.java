@@ -45,6 +45,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.proyectofinal.DAOS.DAONotas;
+import com.example.proyectofinal.DAOS.DAORecordatorios;
 import com.example.proyectofinal.DAOS.DAORutas;
 import com.example.proyectofinal.DAOS.DAORutasNotas;
 import com.example.proyectofinal.DAOS.DAOTareas;
@@ -68,6 +69,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     ImageButton prueba;
     Button btnFecha;
     Button btnInsertar;
+    Button btnRecordatorios;
     EditText txtTitulo, txtDescripcion;
     RecyclerView recyclerView;
     MyRecyclerViewAdapter Imagesadapter;
@@ -91,6 +93,11 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     String currentPhotoPath;
 
     final Calendar c = Calendar.getInstance();
+    final Calendar calendarRecordatorios = Calendar.getInstance();
+    ArrayList <Recordatorio> listaRecordatorios = new ArrayList<>();
+    ArrayList <RecordatorioAuxiliar> noSave = new ArrayList<>();
+    private int dayRecordaotio, monthRecordatorio, yearRecordatorio, hourRecordatorio, minRecordatorio;
+    String mRecordatorio,dRecordatorios,fechaRecordatorio, horaRecordatorio, minutosRecordatorio, hrRecordatorios;
 
 
     @Override
@@ -107,11 +114,13 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         btnAudio = findViewById(R.id.btnAudioTarea);
         btnFecha = findViewById(R.id.btnFecha);
         btnInsertar = findViewById(R.id.btnInsertarTarea);
+        btnRecordatorios = findViewById(R.id.btnRecordatorios);
         btnAdjuntar.setOnClickListener(this);
         btnFecha.setOnClickListener(this);
         btnFoto.setOnClickListener(this);
         btnAudio.setOnClickListener(this);
         btnInsertar.setOnClickListener(this);
+        btnRecordatorios.setOnClickListener(this);
         recyclerView = findViewById(R.id.recycler);
 
         prueba = findViewById(R.id.btnProbar);
@@ -136,6 +145,51 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
     }
 
+    public void crearNotiRecordatorio(int year, int month, int day, int hour, int min){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent = new Intent(this, AlarmReceiver.class);
+        notificationIntent.putExtra("tarea", "Recordatorio de la tarea "+tarea.getTitulo());
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 200, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        calendarRecordatorios.set(year,month,day,hour,min,0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendarRecordatorios.getTimeInMillis(), broadcast);
+
+        Log.i("Recordatorios", "Hora "+hour+":"+min);
+    }
+
+    public void guardarRecordatorios(int year, int month, int day, int hour, int min, String fecha, String hora){
+        RecordatorioAuxiliar r = new RecordatorioAuxiliar(year, month, day, hour, min, fecha, hora);
+        noSave.add(r);
+    }
+
+    public void insertRecordatorios(View view){
+        String[] Tareas1 = {""}; //para que me devuelva todas las tareas y yo tomar la ultima
+        DAOTareas daoTareas = new DAOTareas(this);
+
+        ArrayList<Integer> arrayIds = new ArrayList<>();
+        arrayIds = daoTareas.buscarUltimoId(Tareas1); //El array que me gusrda todos los ids de las Tareas
+
+        if(noSave !=null) {
+            for (int i = 0; i < noSave.size(); i++) {
+
+                crearNotiRecordatorio(noSave.get(i).getYear(), noSave.get(i).getMonth(), noSave.get(i).getDay(),noSave.get(i).getHour(), noSave.get(i).getMin());
+
+                Recordatorio recordatorio = new Recordatorio(0, noSave.get(i).getFecha(), noSave.get(i).getHora(), arrayIds.get(arrayIds.size()-1));
+                DAORecordatorios daoRecordatorios = new DAORecordatorios(this);
+
+                switch (view.getId()) {
+                    case R.id.btnInsertarTarea:
+                        daoRecordatorios.insert(recordatorio);
+                        Log.i("Recordatorios", ""+recordatorio.getId());
+                }
+            }
+
+        }else{
+            //finish();
+        }
+        finish();
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void crearNotificacion(int year, int month, int day, int hour, int min){
@@ -143,17 +197,16 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
         Intent notificationIntent = new Intent(this, AlarmReceiver.class);
 
-        notificationIntent.putExtra("tarea", "Realizar Tarea "+tarea.getTitulo());
+        notificationIntent.putExtra("tarea", "Realizar la tarea "+tarea.getTitulo());
 
         PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Calendar cal = Calendar.getInstance();
 
         c.set(year,month,day,hour,min,0);
-        //cal.setTime(year,month,day,hour,min);// mandarle objeto de tipo date para que suene la notificacion (tambien puedo madar los parametros separados por comas)
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), broadcast);
 
-        Toast.makeText(this, "Se creo la notificacion ", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Se creo la notificacion ", Toast.LENGTH_SHORT).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -163,7 +216,8 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             insert(view);
             crearNotificacion(year,month,day,hour,min);
             insertRutas(view);
-            finish();
+            insertRecordatorios(view);
+
         }
 
         if(view == btnFecha){
@@ -187,6 +241,10 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
         if(view == prueba) {
             reproducirAudio(view);
+        }
+
+        if(view == btnRecordatorios) {
+            abrirCalenadarioRecordatorio(view);
         }
     }
 
@@ -230,11 +288,10 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         }else{
             //finish();
         }
-        finish();
+        //finish();
     }
 
     private void abrirCalenadario(View view) {
-
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
@@ -588,5 +645,64 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         }
         mediaPlayer.start();
         Toast.makeText(getApplicationContext(),getString(R.string.reproduciendo),Toast.LENGTH_SHORT).show();
+    }
+
+    private void abrirCalenadarioRecordatorio(View view) {
+        yearRecordatorio = calendarRecordatorios.get(Calendar.YEAR);
+        monthRecordatorio = calendarRecordatorios.get(Calendar.MONTH);
+        dayRecordaotio = calendarRecordatorios.get(Calendar.DAY_OF_MONTH);
+        hourRecordatorio = calendarRecordatorios.get(Calendar.HOUR_OF_DAY);
+        minRecordatorio = calendarRecordatorios.get(Calendar.MINUTE);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                if((month+1)<10){
+                    mRecordatorio = "0"+""+(month+1);
+                }else{
+                    mRecordatorio = ""+(month+1);
+                }
+                if(dayOfMonth<10){
+                    dRecordatorios = "0"+""+dayOfMonth;
+                }else{
+                    dRecordatorios = ""+dayOfMonth;
+                }
+                //efecha.setText(dayOfMonth+"/"+(month + 1)+"/"+year);
+                //btnFecha.setText(year+"/"+m+"/"+d);
+                fechaRecordatorio= ""+year+"/"+mRecordatorio+"/"+dRecordatorios;
+
+                abrirRelojR();
+            }
+        } ,yearRecordatorio,monthRecordatorio,dayRecordaotio);
+        datePickerDialog.show();
+
+    }
+
+    private void abrirRelojR() {
+        hourRecordatorio = calendarRecordatorios.get(Calendar.HOUR_OF_DAY);
+        minRecordatorio = calendarRecordatorios.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                if((hourOfDay+1)<10){
+                    horaRecordatorio = "0"+""+(hourOfDay);
+                }else{
+                    horaRecordatorio = ""+(hourOfDay);
+                }
+                if(minute<10){
+                    minutosRecordatorio = "0"+""+minute;
+                }else{
+                    minutosRecordatorio= ""+minute;
+                }
+                hrRecordatorios = horaRecordatorio+":"+minutosRecordatorio;
+                minRecordatorio = minute;
+                hourRecordatorio= hourOfDay;
+
+                guardarRecordatorios(yearRecordatorio,monthRecordatorio,dayRecordaotio,hourRecordatorio,minRecordatorio, fechaRecordatorio, hrRecordatorios);
+            }
+        },hourRecordatorio,minRecordatorio,false);
+        timePickerDialog.show();
     }
 }

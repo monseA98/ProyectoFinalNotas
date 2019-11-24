@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -133,6 +136,10 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if(view == btnActualizar){
             actualizar(view);
+            if(year!=0){
+                crearNotificacion(year,month,day,hour,min);
+            }
+            //crearNotificacion(year,month,day,hour,min);
             insertRutas(view);
         }
 
@@ -181,7 +188,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
                     ruta.getDescripcion(), ruta.getRuta()));
         }
 
-        Toast.makeText(this, "Entre al obtenerRutas(): "+listaModel.size(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Entre al obtenerRutas(): "+listaModel.size(), Toast.LENGTH_SHORT).show();
         return listaModel;
     }
 
@@ -211,6 +218,23 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
             //finish();
         }
         finish();
+    }
+
+    public void crearNotificacion(int year, int month, int day, int hour, int min){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent notificationIntent = new Intent(this, AlarmReceiver.class);
+
+        notificationIntent.putExtra("tarea", "Realizar la tarea(cambio fecha) "+tarea.getTitulo());
+
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //Calendar cal = Calendar.getInstance();
+
+        c.set(year,month,day,hour,min,0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), broadcast);
+
+        //Toast.makeText(this, "Se creo la notificacion ", Toast.LENGTH_SHORT).show();
     }
 
     private void dialogoTomar (){
@@ -462,6 +486,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
         hour = c.get(Calendar.HOUR_OF_DAY);
         min = c.get(Calendar.MINUTE);
 
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -487,6 +512,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
     }
 
     private void abrirReloj() {
+
         hour = c.get(Calendar.HOUR_OF_DAY);
         min = c.get(Calendar.MINUTE);
 
@@ -508,6 +534,7 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
                 min = minute;
                 hour= hourOfDay;
                 btnFecha.setText(fecha+"  "+hr);
+
 
             }
         },hour,min,false);
