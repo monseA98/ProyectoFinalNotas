@@ -100,13 +100,11 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
             btnAdjuntar.setEnabled(false);
         }
 
-        //imageView = findViewById(R.id.imageView);
-
-
         adapter = new ArrayAdapter<Model>(this, android.R.layout.simple_list_item_1, listaModelos);
         //recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
 
     }
 
@@ -307,7 +305,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
             Model model = new Model(Model.IMAGE_TYPE,descripcion,path);
             listaModelos.add(model);
 
-            Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();

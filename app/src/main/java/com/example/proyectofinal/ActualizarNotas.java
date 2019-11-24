@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -55,6 +56,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
     MyRecyclerViewAdapter Imagesadapter;
     ArrayAdapter<Model> adapter;
     ArrayList<Model> listaModelos = new ArrayList<>();
+    ArrayList<Model> listaModelosNueva = new ArrayList<>();
 
     Nota nota;
     Uri path;
@@ -109,10 +111,6 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
         recyclerView.setAdapter(Imagesadapter);
 
 
-
-        //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos); //Despues descomentar
-        //recyclerView.setAdapter(Imagesadapter);
-
         if (validarPermisos()) {
             btnFoto.setEnabled(true);
             btnAdjuntar.setEnabled(true);
@@ -128,6 +126,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         if(view == btnActualizar){
             actualizar(view);
+            insertRutas(view);
         }
 
         if(view == btnAdjuntar) {
@@ -219,6 +218,35 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void insertRutas(View view){
+
+        String[] Notas1 = {""};
+        DAONotas daoNotas = new DAONotas(this);
+        ArrayList<Integer> arrayIds = new ArrayList<>();
+        arrayIds = daoNotas.buscarUltimoId(Notas1); //El array que me gusrda todos los ids de las Notas
+
+        if(listaModelosNueva !=null) {
+            for (int i = 0; i < listaModelosNueva.size(); i++) {
+
+
+                Ruta ruta = new Ruta(0, listaModelosNueva.get(i).data, listaModelosNueva.get(i).type, listaModelosNueva.get(i).text ,arrayIds.get(arrayIds.size()-1));
+                DAORutasNotas daoRutasNotas = new DAORutasNotas(this);
+
+                switch (view.getId()) {
+                    case R.id.btnActualizarNota:
+                        daoRutasNotas.insert(ruta);
+                        Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"idNota= "+ruta.getIdTarea());
+                        //finish();
+                }
+                Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+ "idNota= "+ruta.getIdTarea());
+            }
+
+        }else{
+            //finish();
+        }
+        finish();
+    }
+
     private void cargarImagen() {
         Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intentGaleria.setType("image/");
@@ -288,8 +316,8 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             Uri path =  data.getData(); //obtiene la ruta de la imagen seleccionada
             Model model = new Model(Model.IMAGE_TYPE,"Imagen",path);
             listaModelos.add(model);
-
-            Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
@@ -299,6 +327,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             //listaModelos.add(Uri.parse(currentPhotoPath));
             Model model = new Model(0,"",Uri.parse(currentPhotoPath));
             listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
         }
@@ -308,6 +337,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
             listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             //listaModelos.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
@@ -321,6 +351,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
             listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             //listaModelos.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
