@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -25,7 +26,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -54,12 +57,16 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
     Button btnFecha;
     Button btnActualizar;
     EditText txtTitulo, txtDescripcion;
-    ArrayList<Uri> listaRutas = new ArrayList<>();
     Uri path;
+
+    ArrayAdapter<Model> adapter;
+    ArrayList<Model> listaModelos = new ArrayList<>();
+    ArrayList<Model> listaModelosNueva = new ArrayList<>();
 
     Tarea tarea;
     private int day, month, year, hour, min;
     String m,d,fecha, hora, minutos, hr;
+    final Calendar c = Calendar.getInstance();
     Uri ruta;
     String descripcion;
 
@@ -77,8 +84,10 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actualizar_tareas);
 
-
         tarea = (Tarea)getIntent().getExtras().getSerializable("tarea");
+
+        fecha = tarea.getFecha();
+        hr = tarea.getHora();
 
         txtTitulo = findViewById(R.id.txtTituloTareaAct);
         txtTitulo.setText(tarea.getTitulo().toString());
@@ -93,6 +102,8 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
         btnFoto = (ImageButton) findViewById(R.id.btnFotoTareaAct);
         btnAudio = findViewById(R.id.btnAudioTareaAct);
         btnActualizar = findViewById(R.id.btnActualizarTarea);
+        recyclerView = findViewById(R.id.recyclerTareaAct);
+
         btnAdjuntar.setOnClickListener(this);
         btnFecha.setOnClickListener(this);
         btnFoto.setOnClickListener(this);
@@ -107,6 +118,14 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
             btnAdjuntar.setEnabled(false);
         }
 
+        adapter = new ArrayAdapter<Model>(this, android.R.layout.simple_list_item_1, listaModelos);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+
+        listaModelos = obtenerRutas();
+
+        Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
+        recyclerView.setAdapter(Imagesadapter);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -114,11 +133,11 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if(view == btnActualizar){
             actualizar(view);
+            insertRutas(view);
         }
 
         if(view == btnFecha){
-            abrirReloj();
-            abrirCalenadario();
+            abrirCalenadario(view);
         }
 
         if(view == btnAdjuntar) {
@@ -147,6 +166,51 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
                 dao.update(tarea);
                 finish();
         }
+    }
+
+    private ArrayList<Model> obtenerRutas(){
+        ArrayList<Model> listaModel = new ArrayList<>();
+        DAORutas daoRutasTareas = new DAORutas(this);
+        String[] idTarea = {""+tarea.getId()}; //para pasarle el Id de la Nota al de buscar y que busque todas las rutas con el id de la Nota
+
+        for(int i=0; i<daoRutasTareas.buscarObjeto(idTarea).size(); i++){
+
+            Ruta ruta = daoRutasTareas.buscarObjeto(idTarea).get(i);
+
+            listaModel.add(new Model (ruta.getTipo(),
+                    ruta.getDescripcion(), ruta.getRuta()));
+        }
+
+        Toast.makeText(this, "Entre al obtenerRutas(): "+listaModel.size(), Toast.LENGTH_SHORT).show();
+        return listaModel;
+    }
+
+    private void insertRutas(View view){
+
+        String[] Tareas1 = {""};
+        DAOTareas daoTareas = new DAOTareas(this);
+        ArrayList<Integer> arrayIds = new ArrayList<>();
+        arrayIds = daoTareas.buscarUltimoId(Tareas1); //El array que me gusrda todos los ids de las Notas
+
+        if(listaModelosNueva !=null) {
+            for (int i = 0; i < listaModelosNueva.size(); i++) {
+
+                Ruta ruta = new Ruta(0, listaModelosNueva.get(i).data, listaModelosNueva.get(i).type, listaModelosNueva.get(i).text ,tarea.getId());
+                DAORutas daoRutas = new DAORutas(this);
+
+                switch (view.getId()) {
+                    case R.id.btnActualizarTarea:
+                        daoRutas.insert(ruta);
+                        Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"idNota= "+ruta.getIdTarea());
+                        //finish();
+                }
+                Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+ "idNota= "+ruta.getIdTarea());
+            }
+
+        }else{
+            //finish();
+        }
+        finish();
     }
 
     private void dialogoTomar (){
@@ -368,6 +432,12 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
             grabacion.release();
             grabacion = null; //para que pueda volver a grabar si se presiona el boton nuevamente
             btnAudio.setColorFilter(Color.argb(255, 0, 0, 0)); // ya no grabando, regresa a color negro
+
+            Model model = new Model(Model.AUDIO_TYPE, "", Uri.parse(archivoSalida));
+            listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
+            recyclerView.setAdapter(Imagesadapter);
+
             Toast.makeText(getApplicationContext(),getString(R.string.grab_finalizada),Toast.LENGTH_SHORT).show();
         }
     }
@@ -385,11 +455,12 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
         Toast.makeText(getApplicationContext(),"Reproduciendo ultimo audio",Toast.LENGTH_SHORT).show();
     }
 
-    private void abrirCalenadario() {
-        final Calendar c = Calendar.getInstance();
-        day = c.get(Calendar.DAY_OF_MONTH);
-        month = c.get(Calendar.MONTH);
+    private void abrirCalenadario(View view) {
         year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        min = c.get(Calendar.MINUTE);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -404,15 +475,18 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
                 }else{
                     d= ""+dayOfMonth;
                 }
+                //efecha.setText(dayOfMonth+"/"+(month + 1)+"/"+year);
+                //btnFecha.setText(year+"/"+m+"/"+d);
                 fecha= ""+year+"/"+m+"/"+d;
+
+                abrirReloj();
             }
-        }
-                ,year,month,day);
+        } ,year,month,day);
         datePickerDialog.show();
+
     }
 
     private void abrirReloj() {
-        final Calendar c = Calendar.getInstance();
         hour = c.get(Calendar.HOUR_OF_DAY);
         min = c.get(Calendar.MINUTE);
 
@@ -421,9 +495,9 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 if((hourOfDay+1)<10){
-                    hora = "0"+""+(hourOfDay+1);
+                    hora = "0"+""+(hourOfDay);
                 }else{
-                    hora = ""+(hourOfDay+1);
+                    hora = ""+(hourOfDay);
                 }
                 if(minute<10){
                     minutos = "0"+""+minute;
@@ -431,7 +505,10 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
                     minutos= ""+minute;
                 }
                 hr = hora+":"+minutos;
+                min = minute;
+                hour= hourOfDay;
                 btnFecha.setText(fecha+"  "+hr);
+
             }
         },hour,min,false);
         timePickerDialog.show();
@@ -440,40 +517,42 @@ public class ActualizarTareas extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //adjuntar
+        if(requestCode== cod_adjuntar && resultCode==RESULT_OK){
+            Uri path =  data.getData(); //obtiene la ruta de la imagen seleccionada
+            Model model = new Model(Model.IMAGE_TYPE,"Imagen",path);
+            listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
+            recyclerView.setAdapter(Imagesadapter);
 
-        if(requestCode ==  REQUEST_TAKE_PHOTO && resultCode== RESULT_OK){
-            Toast.makeText(this, "path "+currentPhotoPath, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
+        }
 
-            listaRutas.add(Uri.parse(currentPhotoPath));
-
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
+        if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
+            //listaModelos.add(Uri.parse(currentPhotoPath));
+            Model model = new Model(0,"",Uri.parse(currentPhotoPath));
+            listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             recyclerView.setAdapter(Imagesadapter);
         }
 
-        if(requestCode==cod_adjuntar && resultCode==RESULT_OK){
-            path =  data.getData(); //obtiene la ruta de la imagen seleccionada
-            listaRutas.add(path);
-
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
-            recyclerView.setAdapter(Imagesadapter);
-        }
-
+        //TOMAR FOTO O VIDEO
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            listaRutas.add(videoUri);
-
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
+            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
         }
 
-        //tomar video desde la camara
+        //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            listaRutas.add(videoUri);
-
-            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
+            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();

@@ -30,48 +30,13 @@ public class DAORutas {
                 path);
         contentValues.put(BD.COLUMNS_NAME_RUTAS[2],
                 ruta.getTipo());
-        contentValues.put(BD.COLUMNS_NAME_RUTAS[2],
-                ruta.getDescripcion());
         contentValues.put(BD.COLUMNS_NAME_RUTAS[3],
+                ruta.getDescripcion());
+        contentValues.put(BD.COLUMNS_NAME_RUTAS[4],
                 ruta.getIdTarea());
 
         return  _sqLiteDatabase.insert(BD.TABLE_NAME_RUTAS,
                 null, contentValues);
-    }
-
-    public ArrayList<Ruta> buscarObjeto(String[] id){
-        ArrayList<Ruta> rutas = new ArrayList<>();
-
-        ////////////////
-        String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTAS[1]};
-        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS, columnasAConsultar, "idTarea = ?", id, null, null, null);
-
-        if(id[0].equals("")){
-
-            cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS, columnasAConsultar, null, null, null, null, null);
-        }
-
-        if (cursor == null){
-            return rutas;
-        }
-
-        if (!cursor.moveToFirst()) return rutas;
-
-        do {
-
-            int idObtenidoDeBD = cursor.getInt(0);
-            Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
-            int tipoObtenidoDeBD = cursor.getInt(2);
-            String descripcionObtenidoDeBD = cursor.getString(3);
-            int idTareaObtenidoDeBD = cursor.getInt(4);
-
-            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, tipoObtenidoDeBD, descripcionObtenidoDeBD, idTareaObtenidoDeBD);
-            rutas.add(rutaObtenidoDeBD);
-
-        } while (cursor.moveToNext());
-
-        cursor.close();
-        return rutas;
     }
 
     public int eliminar (int id){
@@ -103,6 +68,41 @@ public class DAORutas {
             Uri pathObtenidoDeBD = Uri.parse(cursor.getString(0));
 
             rutas.add(pathObtenidoDeBD);
+
+        } while (cursor.moveToNext());
+
+        cursor.close();
+        return rutas;
+    }
+
+    public ArrayList<Ruta> buscarObjeto(String[] id){
+        ArrayList<Ruta> rutas = new ArrayList<>();
+
+        ////////////////
+        String[] columnasAConsultar = {BD.COLUMNS_NAME_RUTAS[0],BD.COLUMNS_NAME_RUTAS[1],BD.COLUMNS_NAME_RUTAS[2],BD.COLUMNS_NAME_RUTAS[3],BD.COLUMNS_NAME_RUTAS[4]};
+        Cursor cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS, columnasAConsultar, "idTarea = ?", id, null, null, null);
+
+        if(id[0].equals("")){
+
+            cursor = _sqLiteDatabase.query(BD.TABLE_NAME_RUTAS, columnasAConsultar, null, null, null, null, null);
+        }
+
+        if (cursor == null){
+            return rutas;
+        }
+
+        if (!cursor.moveToFirst()) return rutas;
+
+        do {
+
+            int idObtenidoDeBD = cursor.getInt(0);
+            Uri pathObtenidoDeBD = Uri.parse(cursor.getString(1));
+            int tipoObtenidoDeBD = cursor.getInt(2);
+            String descripcionObtenidoDeBD = cursor.getString(3);
+            int idTareaObtenidoDeBD = cursor.getInt(4);
+
+            Ruta rutaObtenidoDeBD = new Ruta(idObtenidoDeBD, pathObtenidoDeBD, tipoObtenidoDeBD, descripcionObtenidoDeBD, idTareaObtenidoDeBD);
+            rutas.add(rutaObtenidoDeBD);
 
         } while (cursor.moveToNext());
 

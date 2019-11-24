@@ -77,6 +77,8 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
         nota = (Nota)getIntent().getExtras().getSerializable("nota");
 
+
+
          //DESCOMENTAR DESPUES
 
         txtTitulo = findViewById(R.id.txtTituloNotaAct);
@@ -99,8 +101,6 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
         //adapter = new ArrayAdapter<Uri>(this, android.R.layout.simple_list_item_1, listaModelos);
         //recyclerView.setAdapter(adapter);
-
-
 
         adapter = new ArrayAdapter<Model>(this, android.R.layout.simple_list_item_1, listaModelos);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
@@ -229,7 +229,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             for (int i = 0; i < listaModelosNueva.size(); i++) {
 
 
-                Ruta ruta = new Ruta(0, listaModelosNueva.get(i).data, listaModelosNueva.get(i).type, listaModelosNueva.get(i).text ,arrayIds.get(arrayIds.size()-1));
+                Ruta ruta = new Ruta(0, listaModelosNueva.get(i).data, listaModelosNueva.get(i).type, listaModelosNueva.get(i).text, nota.getId());
                 DAORutasNotas daoRutasNotas = new DAORutasNotas(this);
 
                 switch (view.getId()) {
@@ -412,6 +412,12 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             grabacion.release();
             grabacion = null; //para que pueda volver a grabar si se presiona el boton nuevamente
             btnAudio.setColorFilter(Color.argb(255, 0, 0, 0)); // ya no grabando, regresa a color negro
+
+            Model model = new Model(Model.AUDIO_TYPE, "", Uri.parse(archivoSalida));
+            listaModelos.add(model);
+            listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
+            recyclerView.setAdapter(Imagesadapter);
+
             Toast.makeText(getApplicationContext(),getString(R.string.grab_finalizada),Toast.LENGTH_SHORT).show();
         }
     }

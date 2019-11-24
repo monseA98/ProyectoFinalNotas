@@ -79,9 +79,8 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     Uri path;
 
     ArrayAdapter<Model> adapter;
-    ArrayList<Model> listaRutas = new ArrayList<>();
+    ArrayList<Model> listaModelos = new ArrayList<>();
     String descripcion; // descripcion de imagen/video/audio
-    //ArrayList<Uri> listaModelos = new ArrayList<>();
 
     private static final int cod_adjuntar = 10;
     private static final int cod_adjuntarVideo = 20;
@@ -113,6 +112,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         btnFoto.setOnClickListener(this);
         btnAudio.setOnClickListener(this);
         btnInsertar.setOnClickListener(this);
+        recyclerView = findViewById(R.id.recycler);
 
         prueba = findViewById(R.id.btnProbar);
         prueba.setOnClickListener(this);
@@ -127,10 +127,13 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             btnAudio.setEnabled(false);
         }
 
-        recyclerView = findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
-        //openDialog();
+        adapter = new ArrayAdapter<Model>(this, android.R.layout.simple_list_item_1, listaModelos);
+        //recyclerView.setAdapter(adapter);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
+
     }
 
 
@@ -202,32 +205,32 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
     private void insertRutas(View view){
 
-        String[] Tareas1 = {""};
-
+        String[] Tareas1 = {""}; //para que me devuelva todas las tareas y yo tomar la ultima
         DAOTareas daoTareas = new DAOTareas(this);
 
         ArrayList<Integer> arrayIds = new ArrayList<>();
-        arrayIds = daoTareas.buscarUltimoId(Tareas1); //El array que me guarda todos los ids de las Tareas
+        arrayIds = daoTareas.buscarUltimoId(Tareas1); //El array que me gusrda todos los ids de las Tareas
 
-        if(listaRutas!=null) {
-            for (int i = 0; i < listaRutas.size(); i++) {
+        if(listaModelos !=null) {
+            for (int i = 0; i < listaModelos.size(); i++) {
 
-                Ruta ruta = new Ruta(0, listaRutas.get(i).data, listaRutas.get(i).type, descripcion ,arrayIds.get(arrayIds.size()-1));
+
+                Ruta ruta = new Ruta(0, listaModelos.get(i).data, listaModelos.get(i).type, listaModelos.get(i).text ,arrayIds.get(arrayIds.size()-1));
                 DAORutas daoRutas = new DAORutas(this);
 
                 switch (view.getId()) {
-                    case R.id.btnInsertarNota:
+                    case R.id.btnInsertarTarea:
                         daoRutas.insert(ruta);
-                        Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"tipo= 1"+" idNota= "+ruta.getIdTarea());
+                        Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"idNota= "+ruta.getIdTarea());
                         //finish();
                 }
-                Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"tipo= 1"+" idNota= "+ruta.getIdTarea());
+                Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+ "idNota= "+ruta.getIdTarea());
             }
 
         }else{
             //finish();
         }
-        //finish();
+        finish();
     }
 
     private void abrirCalenadario(View view) {
@@ -287,7 +290,6 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                 hour= hourOfDay;
                 btnFecha.setText(fecha+"  "+hr);
 
-                //createAlarm("Soy una alarma",hourOfDay,minute);
 
             }
         },hour,min,false);
@@ -414,10 +416,10 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         //adjuntar
         if(requestCode== cod_adjuntar && resultCode==RESULT_OK){
             Uri path =  data.getData(); //obtiene la ruta de la imagen seleccionada
-            Model model = new Model(Model.IMAGE_TYPE,"Imagen",path);
-            listaRutas.add(model);
+            Model model = new Model(Model.IMAGE_TYPE,descripcion,path);
+            listaModelos.add(model);
 
-            Imagesadapter = new MyRecyclerViewAdapter(this, listaRutas);
+            //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
@@ -426,7 +428,7 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
             //listaModelos.add(Uri.parse(currentPhotoPath));
             Model model = new Model(0,"",Uri.parse(currentPhotoPath));
-            listaRutas.add(model);
+            listaModelos.add(model);
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
         }
@@ -435,20 +437,21 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
-            listaRutas.add(model);
+            listaModelos.add(model);
             //listaModelos.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
             Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+
         }
 
         //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
             Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
-            listaRutas.add(model);
+            listaModelos.add(model);
             //listaModelos.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
@@ -526,7 +529,6 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
     @Override
     public void applyTexts(String descripcion) {
-        txtDescripcion.setText(descripcion); //solo para probar si obtiene
         this.descripcion = descripcion; // la variable global descripcion obtiene el valor de lo que hay en el input del Dialog
     }
 
@@ -566,6 +568,11 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             grabacion.release();
             grabacion = null; //para que pueda volver a grabar si se presiona el boton nuevamente
             btnAudio.setColorFilter(Color.argb(255, 0, 0, 0)); // ya no grabando, regresa a color negro
+
+            Model model = new Model(Model.AUDIO_TYPE, "", Uri.parse(archivoSalida));
+            listaModelos.add(model);
+            recyclerView.setAdapter(Imagesadapter);
+
             Toast.makeText(getApplicationContext(),getString(R.string.grab_finalizada),Toast.LENGTH_SHORT).show();
         }
     }

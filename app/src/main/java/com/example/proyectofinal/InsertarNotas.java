@@ -150,7 +150,6 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
     private void insertRutas(View view){
 
         String[] Notas1 = {""};
-
         DAONotas daoNotas = new DAONotas(this);
 
         ArrayList<Integer> arrayIds = new ArrayList<>();
@@ -454,10 +453,12 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
             grabacion.release();
             grabacion = null; //para que pueda volver a grabar si se presiona el boton nuevamente
             btnAudio.setColorFilter(Color.argb(255, 0, 0, 0)); // ya no grabando, regresa a color negro
-            Toast.makeText(getApplicationContext(),getString(R.string.grab_finalizada),Toast.LENGTH_SHORT).show();
 
             Model model = new Model(Model.AUDIO_TYPE, "", Uri.parse(archivoSalida));
             listaModelos.add(model);
+            recyclerView.setAdapter(Imagesadapter);
+
+            Toast.makeText(getApplicationContext(),getString(R.string.grab_finalizada),Toast.LENGTH_SHORT).show();
 
         }
     }
