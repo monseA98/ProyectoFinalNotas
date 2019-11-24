@@ -102,6 +102,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
 
         //imageView = findViewById(R.id.imageView);
 
+
         adapter = new ArrayAdapter<Model>(this, android.R.layout.simple_list_item_1, listaModelos);
         //recyclerView.setAdapter(adapter);
 

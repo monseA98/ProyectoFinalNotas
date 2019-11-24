@@ -97,13 +97,14 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
         //adapter = new ArrayAdapter<Uri>(this, android.R.layout.simple_list_item_1, listaModelos);
         //recyclerView.setAdapter(adapter);
-        obtenerRutas();
-
 
 
 
         adapter = new ArrayAdapter<Model>(this, android.R.layout.simple_list_item_1, listaModelos);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+
+        listaModelos = obtenerRutas();
+
         Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
         recyclerView.setAdapter(Imagesadapter);
 
@@ -187,7 +188,8 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
         alert.show();
     }
 
-    private void obtenerRutas(){
+    private ArrayList<Model> obtenerRutas(){
+        ArrayList<Model> listaModel = new ArrayList<>();
         DAORutasNotas daoRutasNotas = new DAORutasNotas(this);
         String[] idNota = {""+nota.getId()}; //para pasarle el Id de la Nota al de buscar y que busque todas las rutas con el id de la Nota
 
@@ -196,12 +198,12 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
             Ruta ruta = daoRutasNotas.buscarObjeto(idNota).get(i);
 
-            listaModelos.add(new Model (ruta.getTipo(),
+            listaModel.add(new Model (ruta.getTipo(),
                     ruta.getDescripcion(), ruta.getRuta()));
         }
 
-        Toast.makeText(this, "Entre al obtenerRutas(): "+listaModelos.size(), Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, "Entre al obtenerRutas(): "+listaModel.size(), Toast.LENGTH_SHORT).show();
+        return listaModel;
     }
 
     private void actualizar(View view){
