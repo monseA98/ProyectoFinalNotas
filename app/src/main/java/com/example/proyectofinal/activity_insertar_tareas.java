@@ -233,10 +233,12 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
 
         if(view == btnAudio) {
             grabarAudio(view);
+            //openDialog();
         }
 
         if(view == btnFoto) {
             dialogoTomar();
+            openDialog();
         }
 
         if(view == prueba) {
@@ -258,11 +260,10 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                 dao.insert(tarea);
                 //finish();
         }
-        //Toast.makeText(this, "Se inserto la tarea "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Se inserto la tarea "+txtTitulo.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
     private void insertRutas(View view){
-
         String[] Tareas1 = {""}; //para que me devuelva todas las tareas y yo tomar la ultima
         DAOTareas daoTareas = new DAOTareas(this);
 
@@ -279,10 +280,9 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
                 switch (view.getId()) {
                     case R.id.btnInsertarTarea:
                         daoRutas.insert(ruta);
-                        Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+"idNota= "+ruta.getIdTarea());
                         //finish();
                 }
-                Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+ "idNota= "+ruta.getIdTarea());
+                Log.i("RUTAS", ""+ruta.getId() +" path= "+ruta.getRuta()+ "idTarea= "+ruta.getIdTarea());
             }
 
         }else{
@@ -324,7 +324,6 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
     }
 
     private void abrirReloj() {
-
         hour = c.get(Calendar.HOUR_OF_DAY);
         min = c.get(Calendar.MINUTE);
 
@@ -479,12 +478,12 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
         }
 
         if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
             //listaModelos.add(Uri.parse(currentPhotoPath));
-            Model model = new Model(0,"",Uri.parse(currentPhotoPath));
+            Model model = new Model(0,descripcion,Uri.parse(currentPhotoPath));
             listaModelos.add(model);
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
@@ -493,28 +492,28 @@ public class activity_insertar_tareas extends AppCompatActivity implements View.
         //TOMAR FOTO O VIDEO
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, descripcion, videoUri);
             listaModelos.add(model);
             //listaModelos.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
 
         }
 
         //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, descripcion, videoUri);
             listaModelos.add(model);
             //listaModelos.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
         }
     }
 

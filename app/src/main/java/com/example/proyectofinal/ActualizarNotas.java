@@ -131,14 +131,17 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
         if(view == btnAdjuntar) {
             dialogoAdjuntar();
+            openDialog();
         }
 
         if(view == btnAudio) {
             grabarAudio(view);
+            //openDialog();
         }
 
         if(view == btnFoto){
             dialogoTomar();
+            openDialog();
         }
     }
 
@@ -314,18 +317,18 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
         //adjuntar
         if(requestCode== cod_adjuntar && resultCode==RESULT_OK){
             Uri path =  data.getData(); //obtiene la ruta de la imagen seleccionada
-            Model model = new Model(Model.IMAGE_TYPE,"Imagen",path);
+            Model model = new Model(Model.IMAGE_TYPE,descripcion,path);
             listaModelos.add(model);
             listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
         }
 
         if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
             //listaModelos.add(Uri.parse(currentPhotoPath));
-            Model model = new Model(0,"",Uri.parse(currentPhotoPath));
+            Model model = new Model(0,descripcion,Uri.parse(currentPhotoPath));
             listaModelos.add(model);
             listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
@@ -335,7 +338,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
         //TOMAR FOTO O VIDEO
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, descripcion, videoUri);
             listaModelos.add(model);
             listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             //listaModelos.add(videoUri);
@@ -343,13 +346,13 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
         }
 
         //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, descripcion, videoUri);
             listaModelos.add(model);
             listaModelosNueva.add(model); // para que despues no se revuelvan entre las nuevas paths y las viejas
             //listaModelos.add(videoUri);
@@ -357,7 +360,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -372,7 +375,7 @@ public class ActualizarNotas extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void applyTexts(String descripcion) {
-        txtDescripcion.setText(descripcion); //solo para probar si obtiene
+        //txtDescripcion.setText(descripcion); //solo para probar si obtiene
         this.descripcion = descripcion; // la variable global descripcion obtiene el valor de lo que hay en el input del Dialog
     }
 

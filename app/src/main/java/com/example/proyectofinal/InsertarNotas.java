@@ -125,10 +125,12 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
 
         if(view == btnFoto) {
             dialogoTomar();
+            openDialog();
         }
 
         if(view == btnAudio) {
             grabarAudio(view);
+            //openDialog();
         }
     }
 
@@ -307,12 +309,12 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+path, Toast.LENGTH_SHORT).show();
         }
 
         if(requestCode== REQUEST_TAKE_PHOTO && resultCode==RESULT_OK){
             //listaModelos.add(Uri.parse(currentPhotoPath));
-            Model model = new Model(0,"",Uri.parse(currentPhotoPath));
+            Model model = new Model(0,descripcion,Uri.parse(currentPhotoPath));
             listaModelos.add(model);
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
@@ -321,28 +323,28 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         //TOMAR FOTO O VIDEO
         if (requestCode == cod_adjuntarVideo && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, descripcion, videoUri);
             listaModelos.add(model);
             //listaModelos.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
 
         }
 
         //tomar desde la camara
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();//videoView.setVideoURI(videoUri);
-            Model model = new Model(Model.VIDEO_TYPE, "", videoUri);
+            Model model = new Model(Model.VIDEO_TYPE, descripcion, videoUri);
             listaModelos.add(model);
             //listaModelos.add(videoUri);
 
             //Imagesadapter = new MyRecyclerViewAdapter(this, listaModelos);
             recyclerView.setAdapter(Imagesadapter);
 
-            Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+videoUri, Toast.LENGTH_SHORT).show();
         }
     }
 
