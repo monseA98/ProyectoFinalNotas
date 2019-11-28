@@ -137,6 +137,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
                 case Model.VIDEO_TYPE:
                     //Model model = listaModelos.get(position);
                     //Uri url = model.getData();
+                    ((ViewHolderVideo) holder).textVideo.setText(object.text);
                     ((ViewHolderVideo) holder).videoView.setVideoURI(object.data);
                     MediaController mediaController = new MediaController(context);
                     mediaController.setAnchorView(((ViewHolderVideo) holder).videoView);
@@ -185,11 +186,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     public static class ViewHolderVideo extends RecyclerView.ViewHolder {
         VideoView videoView;
-        TextView textAudio;
+        TextView textVideo;
         public ViewHolderVideo(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.video_view);
-            textAudio = itemView.findViewById(R.id.type);
+            textVideo = itemView.findViewById(R.id.type);
         }
     }
 
@@ -201,3 +202,4 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
 
 }
+

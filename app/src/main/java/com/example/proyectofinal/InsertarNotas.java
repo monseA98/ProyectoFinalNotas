@@ -453,7 +453,7 @@ public class InsertarNotas extends AppCompatActivity implements View.OnClickList
         }else if(grabacion!=null){
             grabacion.stop();
             grabacion.release();
-            grabacion = null; //para que pueda volver a grabar si se presiona el boton nuevamente
+            grabacion = null; //para que pueda vo++lver a grabar si se presiona el boton nuevamente
             btnAudio.setColorFilter(Color.argb(255, 0, 0, 0)); // ya no grabando, regresa a color negro
 
             Model model = new Model(Model.AUDIO_TYPE, "", Uri.parse(archivoSalida));
